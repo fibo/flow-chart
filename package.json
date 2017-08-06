@@ -28,9 +28,12 @@
   "bugs": {
     "url": "https://github.com/fibo/flow-chart/issues"
   },
-  "homepage": "https://github.com/fibo/flow-chart#readme",
-  "dependencies": {
+  "homepage": "http://g14n.info/flow-chart",
+  "peerDependencies": {
+    "react": "15.x",
+    "react-dom": "15.x"
   },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "pre-commit": "^1.2.2",
