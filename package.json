@@ -2,12 +2,16 @@
   "name": "flow-chart",
   "version": "0.0.1",
   "description": "is a collection of React components to draw an algorithm, workflow or process diagram",
-  "main": "FlowChart.js",
+  "main": "flow-chart.js",
   "scripts": {
     "babel": "babel src -d .",
+    "browserify": "for x in demo dist; do npm run browserify_$x; done",
+    "browserify_demo": "NODE_PATH=. browserify demo.js -t babelify -o docs/edit/bundle.js",
+    "browserify_dist": "BABEL_ENV=umd NODE_ENV=production browserify -r ./${npm_package_name}.js:${npm_package_name} -t babelify -o dist/${npm_package_name}.js",
     "lint": "cd src; standard; cd --",
-    "postbabel": "git add FlowChart.js components/*js; git commit -m 'transpiled'",
     "postversion": "git push origin v${npm_package_version}; npm publish; git push origin master",
+    "prebrowserify_demo": "npm run babel",
+    "start": "NODE_PATH=src budo demo.js --dir ./docs/edit/ --serve bundle.js --live --open -- -t babelify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pre-commit": [
@@ -36,8 +40,9 @@
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "pre-commit": "^1.2.2",
-    "zeroconf-redux": "^1.2.0",
-    "standard": "^10.0.2"
+    "standard": "^10.0.2",
+    "zeroconf-redux": "^1.2.0"
   }
 }
