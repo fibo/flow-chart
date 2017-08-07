@@ -5,9 +5,11 @@
   "main": "flow-chart.js",
   "scripts": {
     "babel": "babel src -d .",
+    "build": "npm run browserify; npm run homepage",
     "browserify": "for x in demo dist; do npm run browserify_$x; done",
     "browserify_demo": "NODE_PATH=. browserify demo.js -t babelify -o docs/edit/bundle.js",
     "browserify_dist": "BABEL_ENV=umd NODE_ENV=production browserify -r ./${npm_package_name}.js:${npm_package_name} -t babelify -o dist/${npm_package_name}.js",
+    "homepage": "echo \"---\ntitle: $npm_package_name\nflow: /empty.json\n---\" > docs/index.md; cat README.md >> docs/index.md",
     "lint": "cd src; standard; cd --",
     "postversion": "git push origin v${npm_package_version}; npm publish; git push origin master",
     "prebrowserify_demo": "npm run babel",
@@ -34,15 +36,17 @@
   },
   "homepage": "http://g14n.info/flow-chart",
   "peerDependencies": {
-    "react": "15.x",
-    "react-dom": "15.x"
+    "react": "16.x",
+    "react-dom": "16.x"
   },
-  "dependencies": {},
+  "dependencies": {
+    "not-defined": "^1.1.0"
+  },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.2",
-    "zeroconf-redux": "^1.2.0"
+    "zeroconf-redux": "^2.0.0"
   }
 }
