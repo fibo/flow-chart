@@ -7,13 +7,13 @@
     "babel": "babel src -d .",
     "build": "npm run browserify; npm run homepage",
     "browserify": "for x in demo dist; do npm run browserify_$x; done",
-    "browserify_demo": "NODE_PATH=. browserify demo.js -t babelify -o docs/edit/bundle.js",
+    "browserify_demo": "NODE_PATH=. browserify demo.js -t babelify -o docs/demo/bundle.js",
     "browserify_dist": "BABEL_ENV=umd NODE_ENV=production browserify -r ./${npm_package_name}.js:${npm_package_name} -t babelify -o dist/${npm_package_name}.js",
     "homepage": "echo \"---\ntitle: $npm_package_name\nflow: /empty.json\n---\" > docs/index.md; cat README.md >> docs/index.md",
     "lint": "cd src; standard; cd --",
     "postversion": "git push origin v${npm_package_version}; npm publish; git push origin master",
     "prebrowserify_demo": "npm run babel",
-    "start": "NODE_PATH=src budo demo.js --dir ./docs/edit/ --serve bundle.js --live --open -- -t babelify",
+    "start": "NODE_PATH=src budo demo.js --dir ./docs/demo/ --serve bundle.js --live --open -- -t babelify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pre-commit": [
