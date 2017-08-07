@@ -20,6 +20,8 @@ export default class Terminator extends React.Component {
       strokeDasharray: `${width} ${height} ${width} ${height}`
     })
 
+    const halfH = height / 2
+
     return (
       <g transform={`translate(${x},${y})`}>
         <rect
@@ -28,11 +30,11 @@ export default class Terminator extends React.Component {
           width={width}
         />
         <path
-          d={`M0,0 A${height/2},${height/2} 0 0,0 0,${height}`}
+          d={`M0,0 A${halfH},${halfH} 0 0,0 0,${height}`}
           style={style}
         />
         <path
-          d={`M${width},0 A${height/2},${height/2} 0 0,1 ${width},${height}`}
+          d={`M${width},0 A${halfH},${halfH} 0 0,1 ${width},${height}`}
           style={style}
         />
       </g>
