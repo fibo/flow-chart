@@ -14,3 +14,6 @@ defaults:
     values:
       layout: common/page
 
+nav:
+  Demo: "./demo"
+
