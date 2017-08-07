@@ -5,11 +5,19 @@ import FlowChart from 'flow-chart'
 const diagram = {
   items: {
     process: {
-      aaa: {
-        x: 10,
+      a: {
+        x: 250,
         y: 20,
         height: 20,
         width: 100
+      }
+    },
+    terminator: {
+      a: {
+        x: 20,
+        y: 20,
+        height: 25,
+        width: 80
       }
     }
   },

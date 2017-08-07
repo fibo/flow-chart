@@ -18,6 +18,10 @@ var _Process = require('./components/Process');
 
 var _Process2 = _interopRequireDefault(_Process);
 
+var _Terminator = require('./components/Terminator');
+
+var _Terminator2 = _interopRequireDefault(_Terminator);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -58,6 +62,17 @@ var FlowChart = function (_React$Component) {
           var item = items.process[key];
 
           return _react2.default.createElement(_Process2.default, { key: key,
+            x: item.x,
+            y: item.y,
+            style: item.style,
+            height: item.height,
+            width: item.width
+          });
+        }),
+        Object.keys(items.terminator).map(function (key) {
+          var item = items.terminator[key];
+
+          return _react2.default.createElement(_Terminator2.default, { key: key,
             x: item.x,
             y: item.y,
             style: item.style,

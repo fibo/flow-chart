@@ -3,6 +3,7 @@ import React from 'react'
 import no from 'not-defined'
 
 import Process from './components/Process'
+import Terminator from './components/Terminator'
 
 export default class FlowChart extends React.Component {
   render () {
@@ -30,6 +31,19 @@ export default class FlowChart extends React.Component {
 
           return (
             <Process key={key}
+              x={item.x}
+              y={item.y}
+              style={item.style}
+              height={item.height}
+              width={item.width}
+            />
+          )
+        })}
+        {Object.keys(items.terminator).map(key => {
+          const item = items.terminator[key]
+
+          return (
+            <Terminator key={key}
               x={item.x}
               y={item.y}
               style={item.style}
