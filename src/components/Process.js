@@ -12,7 +12,7 @@ export default class Process extends React.Component {
       style: {
         fill: 'white',
         stroke: 'gray',
-        strokeWidth: 2,
+        strokeWidth: 2
       }
     })
 

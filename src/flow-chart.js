@@ -7,14 +7,14 @@ import Process from './components/Process'
 export default class FlowChart extends React.Component {
   render () {
     const {
-      diagram,
+      diagram
     } = this.props
 
     const {
       items,
       style,
       height,
-      width,
+      width
     } = diagram
 
     if (no(items.process)) items.process = {}

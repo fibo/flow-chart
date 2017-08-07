@@ -10,6 +10,14 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _notDefined = require('not-defined');
+
+var _notDefined2 = _interopRequireDefault(_notDefined);
+
+var _Process = require('./components/Process');
+
+var _Process2 = _interopRequireDefault(_Process);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30,10 +38,33 @@ var FlowChart = function (_React$Component) {
   _createClass(FlowChart, [{
     key: 'render',
     value: function render() {
+      var diagram = this.props.diagram;
+      var items = diagram.items,
+          style = diagram.style,
+          height = diagram.height,
+          width = diagram.width;
+
+
+      if ((0, _notDefined2.default)(items.process)) items.process = {};
+
       return _react2.default.createElement(
         'svg',
-        null,
-        _react2.default.createElement('circle', { cx: 50, cy: 50, r: 10, fill: 'red' })
+        {
+          height: height,
+          width: width,
+          style: style
+        },
+        Object.keys(items.process).map(function (key) {
+          var item = items.process[key];
+
+          return _react2.default.createElement(_Process2.default, { key: key,
+            x: item.x,
+            y: item.y,
+            style: item.style,
+            height: item.height,
+            width: item.width
+          });
+        })
       );
     }
   }]);
