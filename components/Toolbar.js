@@ -10,10 +10,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _defaultStyle = require('./defaultStyle');
-
-var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22,43 +18,33 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Decision = function (_React$Component) {
-  _inherits(Decision, _React$Component);
+var Toolbar = function (_React$Component) {
+  _inherits(Toolbar, _React$Component);
 
-  function Decision() {
-    _classCallCheck(this, Decision);
+  function Toolbar() {
+    _classCallCheck(this, Toolbar);
 
-    return _possibleConstructorReturn(this, (Decision.__proto__ || Object.getPrototypeOf(Decision)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Toolbar.__proto__ || Object.getPrototypeOf(Toolbar)).apply(this, arguments));
   }
 
-  _createClass(Decision, [{
+  _createClass(Toolbar, [{
     key: 'render',
     value: function render() {
-      var _Object$assign = Object.assign({}, this.props, {
-        style: _defaultStyle2.default
-      }),
-          editable = _Object$assign.editable,
-          height = _Object$assign.height,
-          width = _Object$assign.width,
-          x = _Object$assign.x,
-          y = _Object$assign.y,
-          style = _Object$assign.style;
+      var _props = this.props,
+          height = _props.height,
+          width = _props.width,
+          fontSize = _props.fontSize;
 
-      var halfH = height / 2;
-      var halfW = width / 2;
 
       return _react2.default.createElement(
-        'g',
-        { transform: 'translate(' + x + ',' + y + ')' },
-        _react2.default.createElement('path', {
-          d: 'M0 ' + halfH + ' L' + halfW + ' 0 L' + width + ' ' + halfH + ' L' + halfW + ' ' + height + 'Z',
-          style: style
-        })
+        'div',
+        { style: { width: width, height: height, fontSize: fontSize } },
+        'toolbar'
       );
     }
   }]);
 
-  return Decision;
+  return Toolbar;
 }(_react2.default.Component);
 
-exports.default = Decision;
+exports.default = Toolbar;

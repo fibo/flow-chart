@@ -15,7 +15,7 @@ export default class Decision extends React.Component {
       style: defaultStyle
     })
 
-    const halfH = editable ? 100 : height / 2
+    const halfH = height / 2
     const halfW = width / 2
 
     return (

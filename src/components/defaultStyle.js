@@ -1,5 +1,6 @@
 const style = {
   fill: 'white',
+  fontSize: 14,
   stroke: 'gray',
   strokeWidth: 2
 }

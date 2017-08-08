@@ -75,6 +75,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
         var _Object$assign = Object.assign({}, this.props, {
           style: _defaultStyle2.default
         }),
+            editable = _Object$assign.editable,
             height = _Object$assign.height,
             width = _Object$assign.width,
             x = _Object$assign.x,
@@ -97,7 +98,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   exports.default = Decision;
 });
 
-},{"./defaultStyle":4,"react":15}],2:[function(require,module,exports){
+},{"./defaultStyle":5,"react":16}],2:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(["exports", 'react', './defaultStyle'], factory);
@@ -196,7 +197,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   exports.default = Process;
 });
 
-},{"./defaultStyle":4,"react":15}],3:[function(require,module,exports){
+},{"./defaultStyle":5,"react":16}],3:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(["exports", 'react', './defaultStyle'], factory);
@@ -305,7 +306,94 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   exports.default = Terminator;
 });
 
-},{"./defaultStyle":4,"react":15}],4:[function(require,module,exports){
+},{"./defaultStyle":5,"react":16}],4:[function(require,module,exports){
+(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define(["exports", 'react'], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(exports, require('react'));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod.exports, global.react);
+    global.Toolbar = mod.exports;
+  }
+})(this, function (exports, _react) {
+  'use strict';
+
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  };
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+  }();
+
+  var _react2 = _interopRequireDefault(_react);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (!self) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+  }
+
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  }
+
+  var Toolbar = function (_React$Component) {
+    _inherits(Toolbar, _React$Component);
+
+    function Toolbar() {
+      _classCallCheck(this, Toolbar);
+
+      return _possibleConstructorReturn(this, (Toolbar.__proto__ || Object.getPrototypeOf(Toolbar)).apply(this, arguments));
+    }
+
+    _createClass(Toolbar, [{
+      key: 'render',
+      value: function render() {
+        var _props = this.props,
+            height = _props.height,
+            width = _props.width,
+            fontSize = _props.fontSize;
+
+        return _react2.default.createElement('div', { style: { width: width, height: height, fontSize: fontSize } }, 'toolbar');
+      }
+    }]);
+
+    return Toolbar;
+  }(_react2.default.Component);
+
+  exports.default = Toolbar;
+});
+
+},{"react":16}],5:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(['exports'], factory);
@@ -326,6 +414,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   });
   var style = {
     fill: 'white',
+    fontSize: 14,
     stroke: 'gray',
     strokeWidth: 2
   };
@@ -333,7 +422,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   exports.default = style;
 });
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 
 /**
@@ -372,7 +461,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -392,7 +481,7 @@ if ("production" !== 'production') {
 }
 
 module.exports = emptyObject;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -448,7 +537,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 }
 
 module.exports = invariant;
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -513,10 +602,10 @@ if ("production" !== 'production') {
 }
 
 module.exports = warning;
-},{"./emptyFunction":5}],9:[function(require,module,exports){
+},{"./emptyFunction":6}],10:[function(require,module,exports){
 module.exports=function(x){return (typeof x==='undefined')||(x === null)}
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -608,7 +697,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -671,7 +760,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 
 module.exports = checkPropTypes;
 
-},{"./lib/ReactPropTypesSecret":12,"fbjs/lib/invariant":7,"fbjs/lib/warning":8}],12:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":13,"fbjs/lib/invariant":8,"fbjs/lib/warning":9}],13:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -687,7 +776,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 
@@ -2395,10 +2484,10 @@ module.exports = ReactEntry;
 })();
 }
 
-},{"fbjs/lib/emptyFunction":5,"fbjs/lib/emptyObject":6,"fbjs/lib/invariant":7,"fbjs/lib/warning":8,"object-assign":10,"prop-types/checkPropTypes":11}],14:[function(require,module,exports){
+},{"fbjs/lib/emptyFunction":6,"fbjs/lib/emptyObject":7,"fbjs/lib/invariant":8,"fbjs/lib/warning":9,"object-assign":11,"prop-types/checkPropTypes":12}],15:[function(require,module,exports){
 "use strict";function e(e){for(var t=arguments.length-1,n="Minified React error #"+e+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant="+e,r=0;r<t;r++)n+="&args[]="+encodeURIComponent(arguments[r+1]);n+=" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";var o=new Error(n);throw o.name="Invariant Violation",o.framesToPop=1,o}function t(e,t){}function n(e,t,n){this.props=e,this.context=t,this.refs=g,this.updater=n||R}function r(e,t,n){this.props=e,this.context=t,this.refs=g,this.updater=n||R}function o(){}function u(e,t,n){this.props=e,this.context=t,this.refs=g,this.updater=n||R}function l(e){return void 0!==e.ref}function i(e){return void 0!==e.key}function c(e){var t={"=":"=0",":":"=2"};return"$"+(""+e).replace(/[=:]/g,function(e){return t[e]})}function a(e){return(""+e).replace(B,"$&/")}function f(e,t,n,r){if(Y.length){var o=Y.pop();return o.result=e,o.keyPrefix=t,o.func=n,o.context=r,o.count=0,o}return{result:e,keyPrefix:t,func:n,context:r,count:0}}function p(e){e.result=null,e.keyPrefix=null,e.func=null,e.context=null,e.count=0,Y.length<W&&Y.push(e)}function s(e,t,n,r){var o=typeof e;if("undefined"!==o&&"boolean"!==o||(e=null),null===e||"string"===o||"number"===o||"object"===o&&e.$$typeof===D)return n(r,e,""===t?K+d(e,0):t),1;var u,l,i=0,c=""===t?K:t+M;if(Array.isArray(e))for(var a=0;a<e.length;a++)u=e[a],l=c+d(u,a),i+=s(u,l,n,r);else{var f=T&&e[T]||e[L];if("function"==typeof f)for(var p,y=f.call(e),m=0;!(p=y.next()).done;)u=p.value,l=c+d(u,m++),i+=s(u,l,n,r);else if("object"===o){var h=""+e;C("31","[object Object]"===h?"object with keys {"+Object.keys(e).join(", ")+"}":h,"")}}return i}function y(e,t,n){return null==e?0:s(e,"",t,n)}function d(e,t){return"object"==typeof e&&null!==e&&null!=e.key?c(e.key):t.toString(36)}function m(e,t,n){var r=e.func,o=e.context;r.call(o,t,e.count++)}function h(e,t,n){if(null==e)return e;var r=f(null,null,t,n);y(e,m,r),p(r)}function v(e,t,n){var r=e.result,o=e.keyPrefix,u=e.func,l=e.context,i=u.call(l,t,e.count++);Array.isArray(i)?b(i,r,n,j.thatReturnsArgument):null!=i&&(N.isValidElement(i)&&(i=N.cloneAndReplaceKey(i,o+(!i.key||t&&t.key===i.key?"":a(i.key)+"/")+n)),r.push(i))}function b(e,t,n,r,o){var u="";null!=n&&(u=a(n)+"/");var l=f(t,u,r,o);y(e,v,l),p(l)}function _(e,t,n){if(null==e)return e;var r=[];return b(e,r,null,t,n),r}function E(e,t){return y(e,j.thatReturnsNull,null)}function S(e){var t=[];return b(e,t,null,j.thatReturnsArgument),t}function k(e){return N.isValidElement(e)||C("143"),e}var A=require("object-assign"),g=require("fbjs/lib/emptyObject");require("fbjs/lib/invariant");var j=require("fbjs/lib/emptyFunction"),C=e,P={isMounted:function(e){return!1},enqueueForceUpdate:function(e,n,r){t(e,"forceUpdate")},enqueueReplaceState:function(e,n,r,o){t(e,"replaceState")},enqueueSetState:function(e,n,r,o){t(e,"setState")}},R=P;n.prototype.isReactComponent={},n.prototype.setState=function(e,t){"object"!=typeof e&&"function"!=typeof e&&null!=e&&C("85"),this.updater.enqueueSetState(this,e,t,"setState")},n.prototype.forceUpdate=function(e){this.updater.enqueueForceUpdate(this,e,"forceUpdate")},o.prototype=n.prototype;var x=r.prototype=new o;x.constructor=r,A(x,n.prototype),x.isPureReactComponent=!0;var w=u.prototype=new o;w.constructor=u,A(w,n.prototype),w.unstable_isAsyncReactComponent=!0,w.render=function(){return this.props.children};var O={Component:n,PureComponent:r,AsyncComponent:u},q={current:null},U=q,$=Object.prototype.hasOwnProperty,F="function"==typeof Symbol&&Symbol.for&&Symbol.for("react.element")||60103,V={key:!0,ref:!0,__self:!0,__source:!0},I=function(e,t,n,r,o,u,l){return{$$typeof:F,type:e,key:t,ref:n,props:l,_owner:u}};I.createElement=function(e,t,n){var r,o={},u=null,c=null,a=null,f=null;if(null!=t){l(t)&&(c=t.ref),i(t)&&(u=""+t.key),a=void 0===t.__self?null:t.__self,f=void 0===t.__source?null:t.__source;for(r in t)$.call(t,r)&&!V.hasOwnProperty(r)&&(o[r]=t[r])}var p=arguments.length-2;if(1===p)o.children=n;else if(p>1){for(var s=Array(p),y=0;y<p;y++)s[y]=arguments[y+2];o.children=s}if(e&&e.defaultProps){var d=e.defaultProps;for(r in d)void 0===o[r]&&(o[r]=d[r])}return I(e,u,c,a,f,U.current,o)},I.createFactory=function(e){var t=I.createElement.bind(null,e);return t.type=e,t},I.cloneAndReplaceKey=function(e,t){return I(e.type,t,e.ref,e._self,e._source,e._owner,e.props)},I.cloneElement=function(e,t,n){var r,o=A({},e.props),u=e.key,c=e.ref,a=e._self,f=e._source,p=e._owner;if(null!=t){l(t)&&(c=t.ref,p=U.current),i(t)&&(u=""+t.key);var s;e.type&&e.type.defaultProps&&(s=e.type.defaultProps);for(r in t)$.call(t,r)&&!V.hasOwnProperty(r)&&(void 0===t[r]&&void 0!==s?o[r]=s[r]:o[r]=t[r])}var y=arguments.length-2;if(1===y)o.children=n;else if(y>1){for(var d=Array(y),m=0;m<y;m++)d[m]=arguments[m+2];o.children=d}return I(e.type,u,c,a,f,p,o)},I.isValidElement=function(e){return"object"==typeof e&&null!==e&&e.$$typeof===F};var N=I,T="function"==typeof Symbol&&Symbol.iterator,L="@@iterator",D="function"==typeof Symbol&&Symbol.for&&Symbol.for("react.element")||60103,K=".",M=":",B=/\/+/g,W=10,Y=[],z={forEach:h,map:_,count:E,toArray:S},G=z,H="16.0.0-beta.3",J=k,Q=N.createElement,X=N.createFactory,Z=N.cloneElement,ee={Children:{map:G.map,forEach:G.forEach,count:G.count,toArray:G.toArray,only:J},Component:O.Component,PureComponent:O.PureComponent,unstable_AsyncComponent:O.AsyncComponent,createElement:Q,cloneElement:Z,isValidElement:N.isValidElement,createFactory:X,version:H,__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:U}},te=ee;module.exports=te;
 
-},{"fbjs/lib/emptyFunction":5,"fbjs/lib/emptyObject":6,"fbjs/lib/invariant":7,"object-assign":10}],15:[function(require,module,exports){
+},{"fbjs/lib/emptyFunction":6,"fbjs/lib/emptyObject":7,"fbjs/lib/invariant":8,"object-assign":11}],16:[function(require,module,exports){
 'use strict';
 
 if ("production" === 'production') {
@@ -2407,20 +2496,20 @@ if ("production" === 'production') {
   module.exports = require('./cjs/react.development.js');
 }
 
-},{"./cjs/react.development.js":13,"./cjs/react.production.min.js":14}],"flow-chart":[function(require,module,exports){
+},{"./cjs/react.development.js":14,"./cjs/react.production.min.js":15}],"flow-chart":[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", 'react', 'not-defined', './components/Decision', './components/Process', './components/Terminator'], factory);
+    define(["exports", 'react', 'not-defined', './components/defaultStyle', './components/Decision', './components/Process', './components/Terminator', './components/Toolbar'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('react'), require('not-defined'), require('./components/Decision'), require('./components/Process'), require('./components/Terminator'));
+    factory(exports, require('react'), require('not-defined'), require('./components/defaultStyle'), require('./components/Decision'), require('./components/Process'), require('./components/Terminator'), require('./components/Toolbar'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react, global.notDefined, global.Decision, global.Process, global.Terminator);
+    factory(mod.exports, global.react, global.notDefined, global.defaultStyle, global.Decision, global.Process, global.Terminator, global.Toolbar);
     global.flowChart = mod.exports;
   }
-})(this, function (exports, _react, _notDefined, _Decision, _Process, _Terminator) {
+})(this, function (exports, _react, _notDefined, _defaultStyle, _Decision, _Process, _Terminator, _Toolbar) {
   'use strict';
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -2433,16 +2522,6 @@ if ("production" === 'production') {
     value: true
   });
 
-  var _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }return target;
-  };
-
   var _createClass = function () {
     function defineProperties(target, props) {
       for (var i = 0; i < props.length; i++) {
@@ -2453,15 +2532,29 @@ if ("production" === 'production') {
     };
   }();
 
+  var _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }return target;
+  };
+
   var _react2 = _interopRequireDefault(_react);
 
   var _notDefined2 = _interopRequireDefault(_notDefined);
+
+  var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
 
   var _Decision2 = _interopRequireDefault(_Decision);
 
   var _Process2 = _interopRequireDefault(_Process);
 
   var _Terminator2 = _interopRequireDefault(_Terminator);
+
+  var _Toolbar2 = _interopRequireDefault(_Toolbar);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : { default: obj };
@@ -2485,39 +2578,96 @@ if ("production" === 'production') {
     }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   }
 
+  var frame = function frame(_ref) {
+    var height = _ref.height,
+        width = _ref.width,
+        style = _ref.style,
+        items = _ref.items;
+    return function (_ref2) {
+      var editable = _ref2.editable;
+      return _react2.default.createElement('svg', {
+        height: height,
+        width: width,
+        style: style
+      }, Object.keys(items.decision).map(function (key) {
+        return _react2.default.createElement(_Decision2.default, _extends({ key: key }, items.decision[key], { editable: true }));
+      }), Object.keys(items.process).map(function (key) {
+        return _react2.default.createElement(_Process2.default, _extends({ key: key }, items.process[key], { editable: true }));
+      }), Object.keys(items.terminator).map(function (key) {
+        return _react2.default.createElement(_Terminator2.default, _extends({ key: key }, items.terminator[key], { editable: true }));
+      }));
+    };
+  };
+
   var FlowChart = function (_React$Component) {
     _inherits(FlowChart, _React$Component);
 
-    function FlowChart() {
+    function FlowChart(props) {
       _classCallCheck(this, FlowChart);
 
-      return _possibleConstructorReturn(this, (FlowChart.__proto__ || Object.getPrototypeOf(FlowChart)).apply(this, arguments));
+      var _this = _possibleConstructorReturn(this, (FlowChart.__proto__ || Object.getPrototypeOf(FlowChart)).call(this, props));
+
+      _this.state = {
+        isMouseOver: false
+      };
+      return _this;
     }
 
     _createClass(FlowChart, [{
       key: 'render',
       value: function render() {
-        var diagram = this.props.diagram;
+        // State and props.
+
+        var _props = this.props,
+            diagram = _props.diagram,
+            editable = _props.editable;
         var items = diagram.items,
             style = diagram.style,
             height = diagram.height,
             width = diagram.width;
+        var isMouseOver = this.state.isMouseOver;
+
+        var setState = this.setState.bind(this);
+
+        // Defaults.
 
         if ((0, _notDefined2.default)(items.decision)) items.decision = {};
         if ((0, _notDefined2.default)(items.process)) items.process = {};
         if ((0, _notDefined2.default)(items.terminator)) items.terminator = {};
 
-        return _react2.default.createElement('svg', {
-          height: height,
+        if ((0, _notDefined2.default)(style.fontSize)) style.fontSize = _defaultStyle2.default.fontSize;
+
+        var toolbarHeight = 2 * style.fontSize;
+
+        var containerStyle = {
+          boxShadow: isMouseOver ? '3px 4px 16px 0px rgba(0, 0, 0, 0.5)' : null,
+          height: toolbarHeight + height,
+          width: width
+
+          // Events.
+
+        };var onMouseEnter = editable ? function () {
+          setState({ isMouseOver: true });
+        } : Function.prototype;
+
+        var onMouseLeave = editable ? function () {
+          setState({ isMouseOver: false });
+        } : Function.prototype;
+
+        // Create an higher order component to be used as frame,
+        // it appears twice in the JSX below depending if the FlowChart
+        // is editable or not.
+        var Frame = frame({ height: height, width: width, style: style, items: items });
+
+        return editable ? _react2.default.createElement('div', {
+          onMouseEnter: onMouseEnter,
+          onMouseLeave: onMouseLeave,
+          style: containerStyle
+        }, _react2.default.createElement(_Toolbar2.default, {
           width: width,
-          style: style
-        }, Object.keys(items.decision).map(function (key) {
-          return _react2.default.createElement(_Decision2.default, _extends({ key: key }, items.decision[key]));
-        }), Object.keys(items.process).map(function (key) {
-          return _react2.default.createElement(_Process2.default, _extends({ key: key }, items.process[key]));
-        }), Object.keys(items.terminator).map(function (key) {
-          return _react2.default.createElement(_Terminator2.default, _extends({ key: key }, items.terminator[key]));
-        }));
+          height: toolbarHeight,
+          fontSize: style.fontSize
+        }), _react2.default.createElement(Frame, { editable: true })) : _react2.default.createElement(Frame, null);
       }
     }]);
 
@@ -2527,4 +2677,4 @@ if ("production" === 'production') {
   exports.default = FlowChart;
 });
 
-},{"./components/Decision":1,"./components/Process":2,"./components/Terminator":3,"not-defined":9,"react":15}]},{},[]);
+},{"./components/Decision":1,"./components/Process":2,"./components/Terminator":3,"./components/Toolbar":4,"./components/defaultStyle":5,"not-defined":10,"react":16}]},{},[]);
