@@ -10,6 +10,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _defaultStyle = require('./defaultStyle');
+
+var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -37,6 +41,8 @@ var DraggableToolbarIcon = function (_React$Component) {
           width = _props.width;
 
 
+      var margin = _defaultStyle2.default.strokeWidth;
+
       return _react2.default.createElement(
         'div',
         {
@@ -51,10 +57,10 @@ var DraggableToolbarIcon = function (_React$Component) {
             width: width
           },
           _react2.default.createElement(Item, {
-            x: 0,
-            y: 0,
-            height: height,
-            width: width
+            x: margin,
+            y: margin,
+            height: height - 2 * margin,
+            width: width - 2 * margin
           })
         )
       );

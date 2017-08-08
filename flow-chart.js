@@ -20,6 +20,10 @@ var _notDefined = require('not-defined');
 
 var _notDefined2 = _interopRequireDefault(_notDefined);
 
+var _defaultProps = require('./components/defaultProps');
+
+var _defaultProps2 = _interopRequireDefault(_defaultProps);
+
 var _defaultStyle = require('./components/defaultStyle');
 
 var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
@@ -63,13 +67,19 @@ var frame = function frame(_ref) {
         style: style
       },
       Object.keys(items.Decision).map(function (key) {
-        return _react2.default.createElement(_Decision2.default, _extends({ key: key }, items.Decision[key], { editable: true }));
+        return _react2.default.createElement(_Decision2.default, _extends({ key: key,
+          editable: true
+        }, _defaultProps2.default, items.Decision[key]));
       }),
       Object.keys(items.Process).map(function (key) {
-        return _react2.default.createElement(_Process2.default, _extends({ key: key }, items.Process[key], { editable: true }));
+        return _react2.default.createElement(_Process2.default, _extends({ key: key,
+          editable: true
+        }, _defaultProps2.default, items.Process[key]));
       }),
       Object.keys(items.Terminator).map(function (key) {
-        return _react2.default.createElement(_Terminator2.default, _extends({ key: key }, items.Terminator[key], { editable: true }));
+        return _react2.default.createElement(_Terminator2.default, _extends({ key: key,
+          editable: true
+        }, _defaultProps2.default, items.Terminator[key]));
       })
     );
   };
@@ -84,6 +94,7 @@ var FlowChart = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (FlowChart.__proto__ || Object.getPrototypeOf(FlowChart)).call(this, props));
 
     _this.state = {
+      diagram: props.diagram,
       isMouseOver: false,
       offset: { x: 0, y: 0 },
       scroll: { x: 0, y: 0 }
@@ -108,7 +119,10 @@ var FlowChart = function (_React$Component) {
         y: window.scrollY
       };
 
-      setState({ offset: offset, scroll: scroll });
+      setState({
+        offset: offset,
+        scroll: scroll
+      });
     }
   }, {
     key: 'render',
@@ -117,14 +131,14 @@ var FlowChart = function (_React$Component) {
 
       // State and props.
 
-      var _props = this.props,
-          diagram = _props.diagram,
-          editable = _props.editable;
+      var editable = this.props.editable;
+      var _state = this.state,
+          diagram = _state.diagram,
+          isMouseOver = _state.isMouseOver;
       var items = diagram.items,
           style = diagram.style,
           height = diagram.height,
           width = diagram.width;
-      var isMouseOver = this.state.isMouseOver;
 
 
       var setState = this.setState.bind(this);
@@ -144,12 +158,34 @@ var FlowChart = function (_React$Component) {
         height: toolbarHeight + height,
         width: width
 
-        // Events.
+        // Utils
 
-      };var getCoordinates = function getCoordinates(event) {
-        var _state = _this2.state,
-            offset = _state.offset,
-            scroll = _state.scroll;
+      };var randomString = function randomString(length) {
+        var result = '';
+
+        while (result.length < length) {
+          result += String.fromCharCode(97 + Math.floor(Math.random() * 26));
+        }
+
+        return result;
+      };
+
+      var generateId = function generateId() {
+        var id = randomString(4);
+
+        var diagram = Object.assign({ Decision: {} }, { Process: {} }, { Terminator: {} }, _this2.state.diagram);
+
+        var idExists = diagram.Decision[id] || diagram.Process[id] || diagram.Terminator[id];
+
+        return idExists ? generateId() : id;
+      };
+
+      // Events.
+
+      var getCoordinates = function getCoordinates(event) {
+        var _state2 = _this2.state,
+            offset = _state2.offset,
+            scroll = _state2.scroll;
 
 
         return {
@@ -158,11 +194,35 @@ var FlowChart = function (_React$Component) {
         };
       };
 
+      var isInsideFlowChart = function isInsideFlowChart(coordinates) {
+        var _state3 = _this2.state,
+            offset = _state3.offset,
+            scroll = _state3.scroll;
+
+
+        return coordinates.x > offset.x + scroll.x && coordinates.x < offset.x + scroll.x + width && coordinates.y > offset.y + scroll.y + toolbarHeight && coordinates.y < offset.y + scroll.y + height;
+      };
+
       var dropToolbarIcon = function dropToolbarIcon(Item) {
         return function (event) {
           var coordinates = getCoordinates(event);
 
-          console.log(coordinates, Item.name);
+          // Create item if droppd inside flowchart.
+          if (isInsideFlowChart(coordinates)) {
+            var id = generateId();
+
+            var _diagram = Object.assign({}, _this2.state.diagram);
+            var itemType = Item.name;
+
+            if ((0, _notDefined2.default)(_diagram.items[itemType])) _diagram.items[itemType] = {};
+
+            var x = coordinates.x - _defaultProps2.default.width / 2;
+            var y = coordinates.y - toolbarHeight - _defaultProps2.default.height / 2;
+
+            _diagram.items[itemType][id] = { x: x, y: y };
+
+            setState({ diagram: _diagram });
+          }
         };
       };
 

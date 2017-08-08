@@ -15,7 +15,7 @@ export default class Terminator extends React.Component {
     })
 
     const rectStyle = Object.assign({}, style, {
-      strokeDasharray: `${width} ${height} ${width} ${height}`
+      strokeDasharray: `${width - height} ${height}`
     })
 
     const halfH = height / 2
@@ -23,16 +23,17 @@ export default class Terminator extends React.Component {
     return (
       <g transform={`translate(${x},${y})`}>
         <rect
+          x={halfH}
           height={height}
           style={rectStyle}
-          width={width}
+          width={width - height}
         />
         <path
-          d={`M0,0 A${halfH},${halfH} 0 0,0 0,${height}`}
+          d={`M${halfH},0 A${halfH},${halfH} 0 0,0 ${halfH},${height}`}
           style={style}
         />
         <path
-          d={`M${width},0 A${halfH},${halfH} 0 0,1 ${width},${height}`}
+          d={`M${width - halfH},0 A${halfH},${halfH} 0 0,1 ${width - halfH},${height}`}
           style={style}
         />
       </g>

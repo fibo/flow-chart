@@ -14,6 +14,14 @@ var _Decision = require('./Decision');
 
 var _Decision2 = _interopRequireDefault(_Decision);
 
+var _Process = require('./Process');
+
+var _Process2 = _interopRequireDefault(_Process);
+
+var _Terminator = require('./Terminator');
+
+var _Terminator2 = _interopRequireDefault(_Terminator);
+
 var _DraggableToolbarIcon = require('./DraggableToolbarIcon');
 
 var _DraggableToolbarIcon2 = _interopRequireDefault(_DraggableToolbarIcon);
@@ -25,6 +33,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var componets = { Terminator: _Terminator2.default, Decision: _Decision2.default, Process: _Process2.default };
 
 var Toolbar = function (_React$Component) {
   _inherits(Toolbar, _React$Component);
@@ -55,11 +65,14 @@ var Toolbar = function (_React$Component) {
             width: width
           }
         },
-        _react2.default.createElement(_DraggableToolbarIcon2.default, {
-          dropToolbarIcon: dropToolbarIcon,
-          height: height,
-          Item: _Decision2.default,
-          width: height
+        Object.keys(componets).map(function (itemType) {
+          return _react2.default.createElement(_DraggableToolbarIcon2.default, {
+            key: itemType,
+            dropToolbarIcon: dropToolbarIcon,
+            height: height,
+            Item: componets[itemType],
+            width: 1.618 * height
+          });
         })
       );
     }

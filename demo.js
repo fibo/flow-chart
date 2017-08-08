@@ -25,7 +25,7 @@ const diagram = {
         x: 20,
         y: 20,
         height: 25,
-        width: 80
+        width: 50
       }
     }
   },

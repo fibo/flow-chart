@@ -44,7 +44,7 @@ var Terminator = function (_React$Component) {
           style = _Object$assign.style;
 
       var rectStyle = Object.assign({}, style, {
-        strokeDasharray: width + ' ' + height + ' ' + width + ' ' + height
+        strokeDasharray: width - height + ' ' + height
       });
 
       var halfH = height / 2;
@@ -53,16 +53,17 @@ var Terminator = function (_React$Component) {
         'g',
         { transform: 'translate(' + x + ',' + y + ')' },
         _react2.default.createElement('rect', {
+          x: halfH,
           height: height,
           style: rectStyle,
-          width: width
+          width: width - height
         }),
         _react2.default.createElement('path', {
-          d: 'M0,0 A' + halfH + ',' + halfH + ' 0 0,0 0,' + height,
+          d: 'M' + halfH + ',0 A' + halfH + ',' + halfH + ' 0 0,0 ' + halfH + ',' + height,
           style: style
         }),
         _react2.default.createElement('path', {
-          d: 'M' + width + ',0 A' + halfH + ',' + halfH + ' 0 0,1 ' + width + ',' + height,
+          d: 'M' + (width - halfH) + ',0 A' + halfH + ',' + halfH + ' 0 0,1 ' + (width - halfH) + ',' + height,
           style: style
         })
       );

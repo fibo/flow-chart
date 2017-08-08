@@ -1,7 +1,11 @@
 import React from 'react'
 
 import Decision from './Decision'
+import Process from './Process'
+import Terminator from './Terminator'
 import DraggableToolbarIcon from './DraggableToolbarIcon'
+
+const componets = { Terminator, Decision, Process }
 
 export default class Toolbar extends React.Component {
   render () {
@@ -21,12 +25,15 @@ export default class Toolbar extends React.Component {
           width
         }}
       >
-        <DraggableToolbarIcon
-          dropToolbarIcon={dropToolbarIcon}
-          height={height}
-          Item={Decision}
-          width={height}
-        />
+        {Object.keys(componets).map(itemType => (
+          <DraggableToolbarIcon
+            key={itemType}
+            dropToolbarIcon={dropToolbarIcon}
+            height={height}
+            Item={componets[itemType]}
+            width={1.618 * height}
+          />
+        ))}
       </div>
     )
   }

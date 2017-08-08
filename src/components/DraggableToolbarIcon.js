@@ -1,5 +1,7 @@
 import React from 'react'
 
+import defaultStyle from './defaultStyle'
+
 export default class DraggableToolbarIcon extends React.Component {
   render () {
     const {
@@ -8,6 +10,8 @@ export default class DraggableToolbarIcon extends React.Component {
       Item,
       width
     } = this.props
+
+    const margin = defaultStyle.strokeWidth
 
     return (
       <div
@@ -20,10 +24,10 @@ export default class DraggableToolbarIcon extends React.Component {
           width={width}
         >
           <Item
-            x={0}
-            y={0}
-            height={height}
-            width={width}
+            x={margin}
+            y={margin}
+            height={height - (2 * margin)}
+            width={width - (2 * margin)}
           />
         </svg>
       </div>
