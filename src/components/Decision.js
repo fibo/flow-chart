@@ -5,7 +5,6 @@ import defaultStyle from './defaultStyle'
 export default class Decision extends React.Component {
   render () {
     const {
-      editable,
       height,
       width,
       x,

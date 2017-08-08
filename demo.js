@@ -4,7 +4,7 @@ import FlowChart from 'flow-chart'
 
 const diagram = {
   items: {
-    decision: {
+    Decision: {
       a: {
         x: 250,
         y: 120,
@@ -12,7 +12,7 @@ const diagram = {
         width: 100
       }
     },
-    process: {
+    Process: {
       a: {
         x: 250,
         y: 20,
@@ -20,7 +20,7 @@ const diagram = {
         width: 100
       }
     },
-    terminator: {
+    Terminator: {
       a: {
         x: 20,
         y: 20,

@@ -12,6 +12,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
 var _notDefined = require('not-defined');
 
 var _notDefined2 = _interopRequireDefault(_notDefined);
@@ -58,14 +62,14 @@ var frame = function frame(_ref) {
         width: width,
         style: style
       },
-      Object.keys(items.decision).map(function (key) {
-        return _react2.default.createElement(_Decision2.default, _extends({ key: key }, items.decision[key], { editable: true }));
+      Object.keys(items.Decision).map(function (key) {
+        return _react2.default.createElement(_Decision2.default, _extends({ key: key }, items.Decision[key], { editable: true }));
       }),
-      Object.keys(items.process).map(function (key) {
-        return _react2.default.createElement(_Process2.default, _extends({ key: key }, items.process[key], { editable: true }));
+      Object.keys(items.Process).map(function (key) {
+        return _react2.default.createElement(_Process2.default, _extends({ key: key }, items.Process[key], { editable: true }));
       }),
-      Object.keys(items.terminator).map(function (key) {
-        return _react2.default.createElement(_Terminator2.default, _extends({ key: key }, items.terminator[key], { editable: true }));
+      Object.keys(items.Terminator).map(function (key) {
+        return _react2.default.createElement(_Terminator2.default, _extends({ key: key }, items.Terminator[key], { editable: true }));
       })
     );
   };
@@ -80,14 +84,37 @@ var FlowChart = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (FlowChart.__proto__ || Object.getPrototypeOf(FlowChart)).call(this, props));
 
     _this.state = {
-      isMouseOver: false
+      isMouseOver: false,
+      offset: { x: 0, y: 0 },
+      scroll: { x: 0, y: 0 }
     };
     return _this;
   }
 
   _createClass(FlowChart, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var setState = this.setState.bind(this);
+
+      var container = _reactDom2.default.findDOMNode(this).parentNode;
+
+      var offset = {
+        x: container.offsetLeft,
+        y: container.offsetTop
+      };
+
+      var scroll = {
+        x: window.scrollX,
+        y: window.scrollY
+      };
+
+      setState({ offset: offset, scroll: scroll });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       // State and props.
 
       var _props = this.props,
@@ -104,9 +131,9 @@ var FlowChart = function (_React$Component) {
 
       // Defaults.
 
-      if ((0, _notDefined2.default)(items.decision)) items.decision = {};
-      if ((0, _notDefined2.default)(items.process)) items.process = {};
-      if ((0, _notDefined2.default)(items.terminator)) items.terminator = {};
+      if ((0, _notDefined2.default)(items.Decision)) items.Decision = {};
+      if ((0, _notDefined2.default)(items.Process)) items.Process = {};
+      if ((0, _notDefined2.default)(items.Terminator)) items.Terminator = {};
 
       if ((0, _notDefined2.default)(style.fontSize)) style.fontSize = _defaultStyle2.default.fontSize;
 
@@ -119,17 +146,38 @@ var FlowChart = function (_React$Component) {
 
         // Events.
 
-      };var onMouseEnter = editable ? function () {
-        setState({ isMouseOver: true });
-      } : Function.prototype;
+      };var getCoordinates = function getCoordinates(event) {
+        var _state = _this2.state,
+            offset = _state.offset,
+            scroll = _state.scroll;
 
-      var onMouseLeave = editable ? function () {
+
+        return {
+          x: event.clientX - offset.x + scroll.x,
+          y: event.clientY - offset.y + scroll.y
+        };
+      };
+
+      var dropToolbarIcon = function dropToolbarIcon(Item) {
+        return function (event) {
+          var coordinates = getCoordinates(event);
+
+          console.log(coordinates, Item.name);
+        };
+      };
+
+      var onMouseEnter = function onMouseEnter() {
+        setState({ isMouseOver: true });
+      };
+
+      var onMouseLeave = function onMouseLeave() {
         setState({ isMouseOver: false });
-      } : Function.prototype;
+      };
 
       // Create an higher order component to be used as frame,
       // it appears twice in the JSX below depending if the FlowChart
       // is editable or not.
+
       var Frame = frame({ height: height, width: width, style: style, items: items });
 
       return editable ? _react2.default.createElement(
@@ -140,11 +188,13 @@ var FlowChart = function (_React$Component) {
           style: containerStyle
         },
         _react2.default.createElement(_Toolbar2.default, {
-          width: width,
+          dropToolbarIcon: dropToolbarIcon,
+          fontSize: style.fontSize,
+          getCoordinates: getCoordinates,
           height: toolbarHeight,
-          fontSize: style.fontSize
+          width: width
         }),
-        _react2.default.createElement(Frame, { editable: true })
+        _react2.default.createElement(Frame, null)
       ) : _react2.default.createElement(Frame, null);
     }
   }]);

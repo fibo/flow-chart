@@ -37,7 +37,6 @@ var Decision = function (_React$Component) {
       var _Object$assign = Object.assign({}, this.props, {
         style: _defaultStyle2.default
       }),
-          editable = _Object$assign.editable,
           height = _Object$assign.height,
           width = _Object$assign.width,
           x = _Object$assign.x,

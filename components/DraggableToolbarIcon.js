@@ -10,14 +10,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Decision = require('./Decision');
-
-var _Decision2 = _interopRequireDefault(_Decision);
-
-var _DraggableToolbarIcon = require('./DraggableToolbarIcon');
-
-var _DraggableToolbarIcon2 = _interopRequireDefault(_DraggableToolbarIcon);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26,46 +18,50 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Toolbar = function (_React$Component) {
-  _inherits(Toolbar, _React$Component);
+var DraggableToolbarIcon = function (_React$Component) {
+  _inherits(DraggableToolbarIcon, _React$Component);
 
-  function Toolbar() {
-    _classCallCheck(this, Toolbar);
+  function DraggableToolbarIcon() {
+    _classCallCheck(this, DraggableToolbarIcon);
 
-    return _possibleConstructorReturn(this, (Toolbar.__proto__ || Object.getPrototypeOf(Toolbar)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (DraggableToolbarIcon.__proto__ || Object.getPrototypeOf(DraggableToolbarIcon)).apply(this, arguments));
   }
 
-  _createClass(Toolbar, [{
+  _createClass(DraggableToolbarIcon, [{
     key: 'render',
     value: function render() {
       var _props = this.props,
           dropToolbarIcon = _props.dropToolbarIcon,
-          fontSize = _props.fontSize,
           height = _props.height,
+          Item = _props.Item,
           width = _props.width;
 
 
       return _react2.default.createElement(
         'div',
         {
-          style: {
-            display: 'flex',
-            fontSize: fontSize,
+          draggable: true,
+          onDragEnd: dropToolbarIcon(Item),
+          style: { height: height, width: width }
+        },
+        _react2.default.createElement(
+          'svg',
+          {
             height: height,
             width: width
-          }
-        },
-        _react2.default.createElement(_DraggableToolbarIcon2.default, {
-          dropToolbarIcon: dropToolbarIcon,
-          height: height,
-          Item: _Decision2.default,
-          width: height
-        })
+          },
+          _react2.default.createElement(Item, {
+            x: 0,
+            y: 0,
+            height: height,
+            width: width
+          })
+        )
       );
     }
   }]);
 
-  return Toolbar;
+  return DraggableToolbarIcon;
 }(_react2.default.Component);
 
-exports.default = Toolbar;
+exports.default = DraggableToolbarIcon;
