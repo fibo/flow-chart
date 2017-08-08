@@ -2,6 +2,7 @@ import React from 'react'
 
 import no from 'not-defined'
 
+import Decision from './components/Decision'
 import Process from './components/Process'
 import Terminator from './components/Terminator'
 
@@ -18,7 +19,9 @@ export default class FlowChart extends React.Component {
       width
     } = diagram
 
+    if (no(items.decision)) items.decision = {}
     if (no(items.process)) items.process = {}
+    if (no(items.terminator)) items.terminator = {}
 
     return (
       <svg
@@ -26,32 +29,15 @@ export default class FlowChart extends React.Component {
         width={width}
         style={style}
       >
-        {Object.keys(items.process).map(key => {
-          const item = items.process[key]
-
-          return (
-            <Process key={key}
-              x={item.x}
-              y={item.y}
-              style={item.style}
-              height={item.height}
-              width={item.width}
-            />
-          )
-        })}
-        {Object.keys(items.terminator).map(key => {
-          const item = items.terminator[key]
-
-          return (
-            <Terminator key={key}
-              x={item.x}
-              y={item.y}
-              style={item.style}
-              height={item.height}
-              width={item.width}
-            />
-          )
-        })}
+        {Object.keys(items.decision).map(key => (
+          <Decision key={key} {...items.decision[key]} />
+        ))}
+        {Object.keys(items.process).map(key => (
+          <Process key={key} {...items.process[key]} />
+        ))}
+        {Object.keys(items.terminator).map(key => (
+          <Terminator key={key} {...items.terminator[key]} />
+        ))}
       </svg>
     )
   }

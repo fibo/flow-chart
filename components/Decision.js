@@ -4,9 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _defaultStyle = require('./defaultStyle');
+
+var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24,6 +30,32 @@ var Decision = function (_React$Component) {
 
     return _possibleConstructorReturn(this, (Decision.__proto__ || Object.getPrototypeOf(Decision)).apply(this, arguments));
   }
+
+  _createClass(Decision, [{
+    key: 'render',
+    value: function render() {
+      var _Object$assign = Object.assign({}, this.props, {
+        style: _defaultStyle2.default
+      }),
+          height = _Object$assign.height,
+          width = _Object$assign.width,
+          x = _Object$assign.x,
+          y = _Object$assign.y,
+          style = _Object$assign.style;
+
+      var halfH = height / 2;
+      var halfW = width / 2;
+
+      return _react2.default.createElement(
+        'g',
+        { transform: 'translate(' + x + ',' + y + ')' },
+        _react2.default.createElement('path', {
+          d: 'M0 ' + halfH + ' L' + halfW + ' 0 L' + width + ' ' + halfH + ' L' + halfW + ' ' + height + 'Z',
+          style: style
+        })
+      );
+    }
+  }]);
 
   return Decision;
 }(_react2.default.Component);

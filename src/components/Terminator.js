@@ -1,5 +1,7 @@
 import React from 'react'
 
+import defaultStyle from './defaultStyle'
+
 export default class Terminator extends React.Component {
   render () {
     const {
@@ -9,11 +11,7 @@ export default class Terminator extends React.Component {
       y,
       style
     } = Object.assign({}, this.props, {
-      style: {
-        fill: 'white',
-        stroke: 'gray',
-        strokeWidth: 2
-      }
+      style: defaultStyle
     })
 
     const rectStyle = Object.assign({}, style, {

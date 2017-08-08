@@ -10,6 +10,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _defaultStyle = require('./defaultStyle');
+
+var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31,11 +35,7 @@ var Terminator = function (_React$Component) {
     key: 'render',
     value: function render() {
       var _Object$assign = Object.assign({}, this.props, {
-        style: {
-          fill: 'white',
-          stroke: 'gray',
-          strokeWidth: 2
-        }
+        style: _defaultStyle2.default
       }),
           height = _Object$assign.height,
           width = _Object$assign.width,
@@ -47,6 +47,8 @@ var Terminator = function (_React$Component) {
         strokeDasharray: width + ' ' + height + ' ' + width + ' ' + height
       });
 
+      var halfH = height / 2;
+
       return _react2.default.createElement(
         'g',
         { transform: 'translate(' + x + ',' + y + ')' },
@@ -56,11 +58,11 @@ var Terminator = function (_React$Component) {
           width: width
         }),
         _react2.default.createElement('path', {
-          d: 'M0,0 A' + height / 2 + ',' + height / 2 + ' 0 0,0 0,' + height,
+          d: 'M0,0 A' + halfH + ',' + halfH + ' 0 0,0 0,' + height,
           style: style
         }),
         _react2.default.createElement('path', {
-          d: 'M' + width + ',0 A' + height / 2 + ',' + height / 2 + ' 0 0,1 ' + width + ',' + height,
+          d: 'M' + width + ',0 A' + halfH + ',' + halfH + ' 0 0,1 ' + width + ',' + height,
           style: style
         })
       );

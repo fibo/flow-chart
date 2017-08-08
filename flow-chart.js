@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -13,6 +15,10 @@ var _react2 = _interopRequireDefault(_react);
 var _notDefined = require('not-defined');
 
 var _notDefined2 = _interopRequireDefault(_notDefined);
+
+var _Decision = require('./components/Decision');
+
+var _Decision2 = _interopRequireDefault(_Decision);
 
 var _Process = require('./components/Process');
 
@@ -49,7 +55,9 @@ var FlowChart = function (_React$Component) {
           width = diagram.width;
 
 
+      if ((0, _notDefined2.default)(items.decision)) items.decision = {};
       if ((0, _notDefined2.default)(items.process)) items.process = {};
+      if ((0, _notDefined2.default)(items.terminator)) items.terminator = {};
 
       return _react2.default.createElement(
         'svg',
@@ -58,27 +66,14 @@ var FlowChart = function (_React$Component) {
           width: width,
           style: style
         },
+        Object.keys(items.decision).map(function (key) {
+          return _react2.default.createElement(_Decision2.default, _extends({ key: key }, items.decision[key]));
+        }),
         Object.keys(items.process).map(function (key) {
-          var item = items.process[key];
-
-          return _react2.default.createElement(_Process2.default, { key: key,
-            x: item.x,
-            y: item.y,
-            style: item.style,
-            height: item.height,
-            width: item.width
-          });
+          return _react2.default.createElement(_Process2.default, _extends({ key: key }, items.process[key]));
         }),
         Object.keys(items.terminator).map(function (key) {
-          var item = items.terminator[key];
-
-          return _react2.default.createElement(_Terminator2.default, { key: key,
-            x: item.x,
-            y: item.y,
-            style: item.style,
-            height: item.height,
-            width: item.width
-          });
+          return _react2.default.createElement(_Terminator2.default, _extends({ key: key }, items.terminator[key]));
         })
       );
     }

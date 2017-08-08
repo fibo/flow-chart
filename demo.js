@@ -4,6 +4,14 @@ import FlowChart from 'flow-chart'
 
 const diagram = {
   items: {
+    decision: {
+      a: {
+        x: 250,
+        y: 120,
+        height: 20,
+        width: 100
+      }
+    },
     process: {
       a: {
         x: 250,
