@@ -5,11 +5,31 @@ import no from 'not-defined'
 import Decision from './components/Decision'
 import Process from './components/Process'
 import Terminator from './components/Terminator'
+import Toolbar from './components/Toolbar'
+
+const frame = ({ height, width, style, items }) => ({ editable }) => (
+  <svg
+    height={height}
+    width={width}
+    style={style}
+  >
+    {Object.keys(items.decision).map(key => (
+      <Decision key={key} {...items.decision[key]} editable />
+    ))}
+    {Object.keys(items.process).map(key => (
+      <Process key={key} {...items.process[key]} editable />
+    ))}
+    {Object.keys(items.terminator).map(key => (
+      <Terminator key={key} {...items.terminator[key]} editable />
+    ))}
+  </svg>
+)
 
 export default class FlowChart extends React.Component {
   render () {
     const {
-      diagram
+      diagram,
+      editable
     } = this.props
 
     const {
@@ -23,22 +43,15 @@ export default class FlowChart extends React.Component {
     if (no(items.process)) items.process = {}
     if (no(items.terminator)) items.terminator = {}
 
+    const Frame = frame({height, width, style, items})
+
     return (
-      <svg
-        height={height}
-        width={width}
-        style={style}
-      >
-        {Object.keys(items.decision).map(key => (
-          <Decision key={key} {...items.decision[key]} />
-        ))}
-        {Object.keys(items.process).map(key => (
-          <Process key={key} {...items.process[key]} />
-        ))}
-        {Object.keys(items.terminator).map(key => (
-          <Terminator key={key} {...items.terminator[key]} />
-        ))}
-      </svg>
+      editable ? (
+        <div>
+          <Toolbar />
+          <Frame editable />
+        </div>
+      ) : <Frame />
     )
   }
 }

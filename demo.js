@@ -35,6 +35,6 @@ const diagram = {
 }
 
 ReactDOM.render(
-  <FlowChart diagram={diagram} />,
+  <FlowChart diagram={diagram} editable />,
   document.getElementById('root')
 )
