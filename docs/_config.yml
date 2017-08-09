@@ -2,8 +2,6 @@
 gems:
   - jekyll-sitemap
 
-markdown: kramdown
-
 # Defaults
 
 defaults:
