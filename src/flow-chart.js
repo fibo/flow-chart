@@ -8,34 +8,45 @@ import defaultStyle from './components/defaultStyle'
 
 import Decision from './components/Decision'
 import Process from './components/Process'
+import RectangularSelection from './components/RectangularSelection'
 import Terminator from './components/Terminator'
 import Toolbar from './components/Toolbar'
 
-const frame = ({ height, width, style, items }) => ({ editable }) => (
+const frame = ({ height, width, style, items }) => ({
+  rectangularSelection,
+  selected,
+  selectItem
+}) => (
   <svg
     height={height}
     width={width}
     style={style}
   >
-    {Object.keys(items.Decision).map(key => (
+    {rectangularSelection
+      ? <RectangularSelection {...rectangularSelection} />
+        : null}
+    {Object.keys(items.decision).map(key => (
       <Decision key={key}
-        editable
+        selected={selected[key]}
+        selectItem={selectItem(key)}
         {...defaultProps}
-        {...items.Decision[key]}
+        {...items.decision[key]}
       />
     ))}
-    {Object.keys(items.Process).map(key => (
+    {Object.keys(items.process).map(key => (
       <Process key={key}
-        editable
+        selected={selected[key]}
+        selectItem={selectItem(key)}
         {...defaultProps}
-        {...items.Process[key]}
+        {...items.process[key]}
       />
     ))}
-    {Object.keys(items.Terminator).map(key => (
+    {Object.keys(items.terminator).map(key => (
       <Terminator key={key}
-        editable
+        selected={selected[key]}
+        selectItem={selectItem(key)}
         {...defaultProps}
-        {...items.Terminator[key]}
+        {...items.terminator[key]}
       />
     ))}
   </svg>
@@ -47,9 +58,12 @@ export default class FlowChart extends React.Component {
 
     this.state = {
       diagram: props.diagram,
+      isMouseMoving: false,
       isMouseOver: false,
       offset: { x: 0, y: 0 },
-      scroll: { x: 0, y: 0 }
+      rectangularSelection: null,
+      scroll: { x: 0, y: 0 },
+      selected: {}
     }
   }
 
@@ -83,7 +97,9 @@ export default class FlowChart extends React.Component {
 
     const {
       diagram,
-      isMouseOver
+      isMouseOver,
+      rectangularSelection,
+      selected
     } = this.state
 
     const {
@@ -173,12 +189,12 @@ export default class FlowChart extends React.Component {
     const dropToolbarIcon = (Item) => (event) => {
       const coordinates = getCoordinates(event)
 
-      // Create item if droppd inside flowchart.
+      // Create item if dropped inside flowchart.
       if (isInsideFlowChart(coordinates)) {
         const id = generateId()
 
         const diagram = Object.assign({}, this.state.diagram)
-        const itemType = Item.name
+        const itemType = Item.name.toLowerCase()
 
         if (no(diagram.items[itemType])) diagram.items[itemType] = {}
 
@@ -191,14 +207,64 @@ export default class FlowChart extends React.Component {
       }
     }
 
+    const onMouseDown = (event) => {
+      const coordinates = getCoordinates(event)
+
+      setState({
+        rectangularSelection: {
+          x: coordinates.x,
+          y: coordinates.y - toolbarHeight,
+          height: 0,
+          width: 0
+        },
+        selected: {}
+      })
+    }
+
     const onMouseEnter = () => {
-      setState({ isMouseOver: true })
+      setState({
+        isMouseOver: true,
+        rectangularSelection: null
+      })
     }
 
     const onMouseLeave = () => {
-      setState({ isMouseOver: false })
+      setState({
+        isMouseOver: false,
+        rectangularSelection: null
+      })
     }
 
+    const onMouseMove = (event) => {
+      const coordinates = getCoordinates(event)
+
+      if (rectangularSelection) {
+        setState({
+          rectangularSelection: {
+            x: rectangularSelection.x,
+            y: rectangularSelection.y,
+            height: (coordinates.y - toolbarHeight - rectangularSelection.y),
+            width: (coordinates.x - rectangularSelection.x)
+          }
+        })
+      }
+    }
+
+    const onMouseUp = () => {
+      setState({ rectangularSelection: null })
+    }
+
+    const selectItem = (key) => (ok) => {
+      const item = {}
+      item[key] = ok
+
+      setState({
+        selected: Object.assign({},
+          this.state.selected,
+          item
+        )
+      })
+    }
     // Create an higher order component to be used as frame,
     // it appears twice in the JSX below depending if the FlowChart
     // is editable or not.
@@ -208,18 +274,24 @@ export default class FlowChart extends React.Component {
     return (
       editable ? (
         <div
+          onMouseDown={onMouseDown}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
           style={containerStyle}
         >
           <Toolbar
             dropToolbarIcon={dropToolbarIcon}
             fontSize={style.fontSize}
-            getCoordinates={getCoordinates}
             height={toolbarHeight}
             width={width}
           />
-          <Frame />
+          <Frame
+            rectangularSelection={rectangularSelection}
+            selected={selected}
+            selectItem={selectItem}
+          />
         </div>
       ) : <Frame />
     )

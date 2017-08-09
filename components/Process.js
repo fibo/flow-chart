@@ -14,6 +14,8 @@ var _defaultStyle = require('./defaultStyle');
 
 var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
 
+var _css = require('../utils/css');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34,22 +36,37 @@ var Process = function (_React$Component) {
   _createClass(Process, [{
     key: 'render',
     value: function render() {
-      var _Object$assign = Object.assign({}, this.props, {
+      var _Object$assign = Object.assign({}, {
+        selected: false,
+        selectItem: Function.prototype
+      }, this.props, {
         style: _defaultStyle2.default
       }),
           height = _Object$assign.height,
           width = _Object$assign.width,
           x = _Object$assign.x,
           y = _Object$assign.y,
+          selected = _Object$assign.selected,
+          selectItem = _Object$assign.selectItem,
           style = _Object$assign.style;
 
-      return _react2.default.createElement('rect', {
-        x: x,
-        y: y,
-        height: height,
-        style: style,
-        width: width
-      });
+      var onMouseDown = function onMouseDown(event) {
+        event.stopPropagation();
+        selectItem(!selected);
+      };
+
+      return _react2.default.createElement(
+        'g',
+        {
+          onMouseDown: onMouseDown,
+          transform: 'translate(' + x + ',' + y + ')'
+        },
+        _react2.default.createElement('rect', {
+          height: height,
+          style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style),
+          width: width
+        })
+      );
     }
   }]);
 

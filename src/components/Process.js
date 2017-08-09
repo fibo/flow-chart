@@ -2,6 +2,10 @@ import React from 'react'
 
 import defaultStyle from './defaultStyle'
 
+import {
+  strokeDasharraySelected
+} from '../utils/css'
+
 export default class Process extends React.Component {
   render () {
     const {
@@ -9,19 +13,35 @@ export default class Process extends React.Component {
       width,
       x,
       y,
+      selected,
+      selectItem,
       style
-    } = Object.assign({}, this.props, {
+    } = Object.assign({}, {
+      selected: false,
+      selectItem: Function.prototype
+    }, this.props, {
       style: defaultStyle
     })
 
+    const onMouseDown = (event) => {
+      event.stopPropagation()
+      selectItem(!selected)
+    }
+
     return (
-      <rect
-        x={x}
-        y={y}
-        height={height}
-        style={style}
-        width={width}
-      />
+      <g
+        onMouseDown={onMouseDown}
+        transform={`translate(${x},${y})`}
+      >
+        <rect
+          height={height}
+          style={Object.assign({},
+            (selected ? strokeDasharraySelected : {}),
+            style
+          )}
+          width={width}
+        />
+      </g>
     )
   }
 }

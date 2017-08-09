@@ -6,11 +6,6 @@ flow: /empty.json
 
 > is a collection of [React] components to draw an algorithm, workflow or process diagram
 
-## Features
-
-- [ ] ToDo
-- [x] Completed
-
 ## Installation
 
 [React] is required as a peer dependency.

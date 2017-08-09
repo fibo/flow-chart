@@ -25,15 +25,19 @@ export default class Toolbar extends React.Component {
           width
         }}
       >
-        {Object.keys(componets).map(itemType => (
-          <DraggableToolbarIcon
-            key={itemType}
-            dropToolbarIcon={dropToolbarIcon}
-            height={height}
-            Item={componets[itemType]}
-            width={1.618 * height}
-          />
-        ))}
+        <div
+          style={{ display: 'flex' }}
+        >
+          {Object.keys(componets).map(itemType => (
+            <DraggableToolbarIcon
+              key={itemType}
+              dropToolbarIcon={dropToolbarIcon}
+              height={height}
+              Item={componets[itemType]}
+              width={1.618 * height}
+            />
+          ))}
+        </div>
       </div>
     )
   }

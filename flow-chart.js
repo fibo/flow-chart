@@ -36,6 +36,10 @@ var _Process = require('./components/Process');
 
 var _Process2 = _interopRequireDefault(_Process);
 
+var _RectangularSelection = require('./components/RectangularSelection');
+
+var _RectangularSelection2 = _interopRequireDefault(_RectangularSelection);
+
 var _Terminator = require('./components/Terminator');
 
 var _Terminator2 = _interopRequireDefault(_Terminator);
@@ -58,7 +62,9 @@ var frame = function frame(_ref) {
       style = _ref.style,
       items = _ref.items;
   return function (_ref2) {
-    var editable = _ref2.editable;
+    var rectangularSelection = _ref2.rectangularSelection,
+        selected = _ref2.selected,
+        selectItem = _ref2.selectItem;
     return _react2.default.createElement(
       'svg',
       {
@@ -66,20 +72,24 @@ var frame = function frame(_ref) {
         width: width,
         style: style
       },
-      Object.keys(items.Decision).map(function (key) {
+      rectangularSelection ? _react2.default.createElement(_RectangularSelection2.default, rectangularSelection) : null,
+      Object.keys(items.decision).map(function (key) {
         return _react2.default.createElement(_Decision2.default, _extends({ key: key,
-          editable: true
-        }, _defaultProps2.default, items.Decision[key]));
+          selected: selected[key],
+          selectItem: selectItem(key)
+        }, _defaultProps2.default, items.decision[key]));
       }),
-      Object.keys(items.Process).map(function (key) {
+      Object.keys(items.process).map(function (key) {
         return _react2.default.createElement(_Process2.default, _extends({ key: key,
-          editable: true
-        }, _defaultProps2.default, items.Process[key]));
+          selected: selected[key],
+          selectItem: selectItem(key)
+        }, _defaultProps2.default, items.process[key]));
       }),
-      Object.keys(items.Terminator).map(function (key) {
+      Object.keys(items.terminator).map(function (key) {
         return _react2.default.createElement(_Terminator2.default, _extends({ key: key,
-          editable: true
-        }, _defaultProps2.default, items.Terminator[key]));
+          selected: selected[key],
+          selectItem: selectItem(key)
+        }, _defaultProps2.default, items.terminator[key]));
       })
     );
   };
@@ -95,9 +105,12 @@ var FlowChart = function (_React$Component) {
 
     _this.state = {
       diagram: props.diagram,
+      isMouseMoving: false,
       isMouseOver: false,
       offset: { x: 0, y: 0 },
-      scroll: { x: 0, y: 0 }
+      rectangularSelection: null,
+      scroll: { x: 0, y: 0 },
+      selected: {}
     };
     return _this;
   }
@@ -134,7 +147,9 @@ var FlowChart = function (_React$Component) {
       var editable = this.props.editable;
       var _state = this.state,
           diagram = _state.diagram,
-          isMouseOver = _state.isMouseOver;
+          isMouseOver = _state.isMouseOver,
+          rectangularSelection = _state.rectangularSelection,
+          selected = _state.selected;
       var items = diagram.items,
           style = diagram.style,
           height = diagram.height,
@@ -207,12 +222,12 @@ var FlowChart = function (_React$Component) {
         return function (event) {
           var coordinates = getCoordinates(event);
 
-          // Create item if droppd inside flowchart.
+          // Create item if dropped inside flowchart.
           if (isInsideFlowChart(coordinates)) {
             var id = generateId();
 
             var _diagram = Object.assign({}, _this2.state.diagram);
-            var itemType = Item.name;
+            var itemType = Item.name.toLowerCase();
 
             if ((0, _notDefined2.default)(_diagram.items[itemType])) _diagram.items[itemType] = {};
 
@@ -226,14 +241,63 @@ var FlowChart = function (_React$Component) {
         };
       };
 
+      var onMouseDown = function onMouseDown(event) {
+        var coordinates = getCoordinates(event);
+
+        setState({
+          rectangularSelection: {
+            x: coordinates.x,
+            y: coordinates.y - toolbarHeight,
+            height: 0,
+            width: 0
+          },
+          selected: {}
+        });
+      };
+
       var onMouseEnter = function onMouseEnter() {
-        setState({ isMouseOver: true });
+        setState({
+          isMouseOver: true,
+          rectangularSelection: null
+        });
       };
 
       var onMouseLeave = function onMouseLeave() {
-        setState({ isMouseOver: false });
+        setState({
+          isMouseOver: false,
+          rectangularSelection: null
+        });
       };
 
+      var onMouseMove = function onMouseMove(event) {
+        var coordinates = getCoordinates(event);
+
+        if (rectangularSelection) {
+          setState({
+            rectangularSelection: {
+              x: rectangularSelection.x,
+              y: rectangularSelection.y,
+              height: coordinates.y - toolbarHeight - rectangularSelection.y,
+              width: coordinates.x - rectangularSelection.x
+            }
+          });
+        }
+      };
+
+      var onMouseUp = function onMouseUp() {
+        setState({ rectangularSelection: null });
+      };
+
+      var selectItem = function selectItem(key) {
+        return function (ok) {
+          var item = {};
+          item[key] = ok;
+
+          setState({
+            selected: Object.assign({}, _this2.state.selected, item)
+          });
+        };
+      };
       // Create an higher order component to be used as frame,
       // it appears twice in the JSX below depending if the FlowChart
       // is editable or not.
@@ -243,18 +307,24 @@ var FlowChart = function (_React$Component) {
       return editable ? _react2.default.createElement(
         'div',
         {
+          onMouseDown: onMouseDown,
           onMouseEnter: onMouseEnter,
           onMouseLeave: onMouseLeave,
+          onMouseMove: onMouseMove,
+          onMouseUp: onMouseUp,
           style: containerStyle
         },
         _react2.default.createElement(_Toolbar2.default, {
           dropToolbarIcon: dropToolbarIcon,
           fontSize: style.fontSize,
-          getCoordinates: getCoordinates,
           height: toolbarHeight,
           width: width
         }),
-        _react2.default.createElement(Frame, null)
+        _react2.default.createElement(Frame, {
+          rectangularSelection: rectangularSelection,
+          selected: selected,
+          selectItem: selectItem
+        })
       ) : _react2.default.createElement(Frame, null);
     }
   }]);

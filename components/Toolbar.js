@@ -65,15 +65,21 @@ var Toolbar = function (_React$Component) {
             width: width
           }
         },
-        Object.keys(componets).map(function (itemType) {
-          return _react2.default.createElement(_DraggableToolbarIcon2.default, {
-            key: itemType,
-            dropToolbarIcon: dropToolbarIcon,
-            height: height,
-            Item: componets[itemType],
-            width: 1.618 * height
-          });
-        })
+        _react2.default.createElement(
+          'div',
+          {
+            style: { display: 'flex' }
+          },
+          Object.keys(componets).map(function (itemType) {
+            return _react2.default.createElement(_DraggableToolbarIcon2.default, {
+              key: itemType,
+              dropToolbarIcon: dropToolbarIcon,
+              height: height,
+              Item: componets[itemType],
+              width: 1.618 * height
+            });
+          })
+        )
       );
     }
   }]);
