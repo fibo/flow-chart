@@ -11,7 +11,6 @@ export default class DraggableToolbarIcon extends React.Component {
   dropToolbarIcon: FdropToolbarIcon
 }
 
-
   render () {
     const {
       dropToolbarIcon,

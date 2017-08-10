@@ -13,12 +13,14 @@ export default class Process extends Step {
       selected,
       selectedColor,
       selectStep,
+      stopDragging,
       style
     } = this.props
 
     return (
       <g
-        onMouseDown={selectStep(!selected)}
+        onMouseUp={stopDragging}
+        onMouseDown={selectStep}
         transform={`translate(${x},${y})`}
       >
         <rect

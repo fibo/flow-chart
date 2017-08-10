@@ -13,6 +13,7 @@ export default class Terminator extends Step {
       selected,
       selectedColor,
       selectStep,
+      stopDragging,
       style
     } = this.props
 
@@ -26,7 +27,8 @@ export default class Terminator extends Step {
 
     return (
       <g
-        onMouseDown={selectStep(!selected)}
+        onMouseDown={selectStep}
+        onMouseUp={stopDragging}
         transform={`translate(${x},${y})`}
       >
         <rect

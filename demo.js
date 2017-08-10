@@ -9,16 +9,13 @@ const diagram = {
       a: {
         x: 250,
         y: 120,
-        height: 20,
         width: 100
       }
     },
     process: {
       b: {
         x: 250,
-        y: 20,
-        height: 20,
-        width: 100
+        y: 20
       }
     },
     terminator: {

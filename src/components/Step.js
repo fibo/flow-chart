@@ -1,18 +1,23 @@
 // @flow
 import React from 'react'
 
-import { FselectStep } from '../types'
+import {
+  FselectStep,
+  FstopDragging
+} from '../types'
 
 export default class Step extends React.Component {
   props: {
     height: number,
     onMouseDown: (event: MouseEvent) => void,
+    stopPropagation: (event: MouseEvent) => void,
     x: number,
     y: number,
     width: number,
     selected: boolean,
     selectedColor: 'string',
     selectStep: FselectStep,
+    stopDragging: FstopDragging,
     style: any
   }
 
@@ -22,6 +27,8 @@ export default class Step extends React.Component {
     selected: false,
     selectedColor: 'tomato',
     selectStep: Function.prototype,
+    stopDragging: Function.prototype,
+    stopPropagation: (event) => { event.stopPropagation() },
     style: {
       fill: 'white',
       fontSize: 14,
