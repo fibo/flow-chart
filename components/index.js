@@ -18,8 +18,4 @@ var _Terminator2 = _interopRequireDefault(_Terminator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
-  Decision: _Decision2.default,
-  Process: _Process2.default,
-  Terminator: _Terminator2.default
-};
+exports.default = { Decision: _Decision2.default, Process: _Process2.default, Terminator: _Terminator2.default };

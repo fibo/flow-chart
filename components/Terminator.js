@@ -10,9 +10,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _defaultStyle = require('./defaultStyle');
+var _Step2 = require('./Step');
 
-var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
+var _Step3 = _interopRequireDefault(_Step2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22,8 +22,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Terminator = function (_React$Component) {
-  _inherits(Terminator, _React$Component);
+var Terminator = function (_Step) {
+  _inherits(Terminator, _Step);
 
   function Terminator() {
     _classCallCheck(this, Terminator);
@@ -34,33 +34,25 @@ var Terminator = function (_React$Component) {
   _createClass(Terminator, [{
     key: 'render',
     value: function render() {
-      var _Object$assign = Object.assign({}, {
-        selected: false,
-        selectItem: Function.prototype
-      }, this.props, {
-        style: _defaultStyle2.default
-      }),
-          height = _Object$assign.height,
-          width = _Object$assign.width,
-          x = _Object$assign.x,
-          y = _Object$assign.y,
-          selected = _Object$assign.selected,
-          selectItem = _Object$assign.selectItem,
-          style = _Object$assign.style;
+      var _props = this.props,
+          height = _props.height,
+          width = _props.width,
+          x = _props.x,
+          y = _props.y,
+          selected = _props.selected,
+          selectedColor = _props.selectedColor,
+          selectStep = _props.selectStep,
+          style = _props.style;
 
-      var rectStyle = Object.assign({}, style, { strokeDasharray: width - height + ' ' + height }, selected ? { stroke: _defaultStyle.selectedColor } : {});
+
+      var rectStyle = Object.assign({}, style, { strokeDasharray: width - height + ' ' + height }, selected ? { stroke: selectedColor } : {});
 
       var halfH = height / 2;
-
-      var onMouseDown = function onMouseDown(event) {
-        event.stopPropagation();
-        selectItem(!selected);
-      };
 
       return _react2.default.createElement(
         'g',
         {
-          onMouseDown: onMouseDown,
+          onMouseDown: selectStep(!selected),
           transform: 'translate(' + x + ',' + y + ')'
         },
         _react2.default.createElement('rect', {
@@ -71,17 +63,17 @@ var Terminator = function (_React$Component) {
         }),
         _react2.default.createElement('path', {
           d: 'M' + halfH + ',0 A' + halfH + ',' + halfH + ' 0 0,0 ' + halfH + ',' + height,
-          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
+          style: Object.assign({}, style, selected ? { stroke: selectedColor } : {})
         }),
         _react2.default.createElement('path', {
           d: 'M' + (width - halfH) + ',0 A' + halfH + ',' + halfH + ' 0 0,1 ' + (width - halfH) + ',' + height,
-          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
+          style: Object.assign({}, style, selected ? { stroke: selectedColor } : {})
         })
       );
     }
   }]);
 
   return Terminator;
-}(_react2.default.Component);
+}(_Step3.default);
 
 exports.default = Terminator;

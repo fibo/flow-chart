@@ -10,7 +10,7 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _css = require('../utils/css');
+var _types = require('../types');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45,11 +45,12 @@ var RectangularSelection = function (_React$Component) {
       return _react2.default.createElement('rect', {
         transform: 'translate(' + x + ' ' + y + ') scale(' + scaleX + ' ' + scaleY + ')',
         height: Math.abs(height),
-        style: Object.assign({}, {
+        style: {
           fill: 'transparent',
           stroke: 'gray',
+          strokeDasharray: '10 10',
           strokeWidth: 2
-        }, _css.strokeDasharraySelected),
+        },
         width: Math.abs(width)
       });
     }

@@ -1,21 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import no from 'not-defined'
-
-import defaultProps from './components/defaultProps'
-import defaultStyle from './components/defaultStyle'
+import {
+  Point,
+  Rectangle
+} from './types'
 
 import Decision from './components/Decision'
 import Process from './components/Process'
-import RectangularSelection from './components/RectangularSelection'
 import Terminator from './components/Terminator'
+
+import RectangularSelection from './components/RectangularSelection'
+import Step from './components/Step'
 import Toolbar from './components/Toolbar'
 
 const frame = ({ height, width, style, items }) => ({
   rectangularSelection,
   selected,
-  selectItem
+  selectStep
 }) => (
   <svg
     height={height}
@@ -28,24 +30,21 @@ const frame = ({ height, width, style, items }) => ({
     {Object.keys(items.decision).map(key => (
       <Decision key={key}
         selected={selected[key]}
-        selectItem={selectItem(key)}
-        {...defaultProps}
+        selectStep={selectStep(key)}
         {...items.decision[key]}
       />
     ))}
     {Object.keys(items.process).map(key => (
       <Process key={key}
         selected={selected[key]}
-        selectItem={selectItem(key)}
-        {...defaultProps}
+        selectStep={selectStep(key)}
         {...items.process[key]}
       />
     ))}
     {Object.keys(items.terminator).map(key => (
       <Terminator key={key}
         selected={selected[key]}
-        selectItem={selectItem(key)}
-        {...defaultProps}
+        selectStep={selectStep(key)}
         {...items.terminator[key]}
       />
     ))}
@@ -53,6 +52,25 @@ const frame = ({ height, width, style, items }) => ({
 )
 
 export default class FlowChart extends React.Component {
+  state: {
+    diagram: {
+      items: {
+        decision: any,
+        process: any,
+        terminator: any
+      },
+      height: any,
+      style: any,
+      width: number
+    },
+    isMouseMoving: boolean,
+    isMouseOver: boolean,
+    offset: Point,
+    rectangularSelection: ?Rectangle,
+    scroll: Point,
+    selected: any
+  }
+
   constructor (props) {
     super(props)
 
@@ -97,7 +115,6 @@ export default class FlowChart extends React.Component {
 
     const {
       diagram,
-      isMouseDown,
       isMouseOver,
       rectangularSelection,
       selected
@@ -114,13 +131,11 @@ export default class FlowChart extends React.Component {
 
     // Defaults.
 
-    if (no(items.Decision)) items.Decision = {}
-    if (no(items.Process)) items.Process = {}
-    if (no(items.Terminator)) items.Terminator = {}
+    if (!items.decision) items.decision = {}
+    if (!items.process) items.process = {}
+    if (!items.terminator) items.terminator = {}
 
-    if (no(style.fontSize)) style.fontSize = defaultStyle.fontSize
-
-    const toolbarHeight = 2 * style.fontSize
+    const toolbarHeight = 2 * Step.defaultProps.style.fontSize
 
     const containerStyle = {
       boxShadow: isMouseOver ? '3px 4px 16px 0px rgba(0, 0, 0, 0.5)' : null,
@@ -143,17 +158,17 @@ export default class FlowChart extends React.Component {
     const generateId = () => {
       const id = randomString(4)
 
-      const diagram = Object.assign(
-        { Decision: {} },
-        { Process: {} },
-        { Terminator: {} },
-        this.state.diagram
+      const items = Object.assign(
+        { decision: {} },
+        { process: {} },
+        { terminator: {} },
+        this.state.diagram.items
       )
 
       const idExists = (
-        diagram.Decision[id] ||
-        diagram.Process[id] ||
-        diagram.Terminator[id]
+        items.decision[id] ||
+        items.process[id] ||
+        items.terminator[id]
       )
 
       return idExists ? generateId() : id
@@ -197,10 +212,10 @@ export default class FlowChart extends React.Component {
         const diagram = Object.assign({}, this.state.diagram)
         const itemType = Item.name.toLowerCase()
 
-        if (no(diagram.items[itemType])) diagram.items[itemType] = {}
+        if (!diagram.items[itemType]) diagram.items[itemType] = {}
 
-        const x = coordinates.x - (defaultProps.width / 2)
-        const y = coordinates.y - toolbarHeight - (defaultProps.height / 2)
+        const x = coordinates.x - (Step.defaultProps.width / 2)
+        const y = coordinates.y - toolbarHeight - (Step.defaultProps.height / 2)
 
         diagram.items[itemType][id] = {x, y}
 
@@ -212,7 +227,6 @@ export default class FlowChart extends React.Component {
       const coordinates = getCoordinates(event)
 
       setState({
-        isMouseDown: true,
         rectangularSelection: {
           x: coordinates.x,
           y: coordinates.y - toolbarHeight,
@@ -254,14 +268,15 @@ export default class FlowChart extends React.Component {
 
     const onMouseUp = () => {
       setState({
-        isMouseDown: false,
         rectangularSelection: null
       })
     }
 
-    const selectItem = (key) => (ok) => {
+    const selectStep = (key) => (selected) => (event) => {
+      event.stopPropagation()
+
       const item = {}
-      item[key] = ok
+      item[key] = selected
 
       setState({
         selected: Object.assign({},
@@ -295,7 +310,7 @@ export default class FlowChart extends React.Component {
           <Frame
             rectangularSelection={rectangularSelection}
             selected={selected}
-            selectItem={selectItem}
+            selectStep={selectStep}
           />
         </div>
       ) : <Frame />

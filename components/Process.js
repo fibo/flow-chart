@@ -10,9 +10,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _defaultStyle = require('./defaultStyle');
+var _Step2 = require('./Step');
 
-var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
+var _Step3 = _interopRequireDefault(_Step2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22,8 +22,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Process = function (_React$Component) {
-  _inherits(Process, _React$Component);
+var Process = function (_Step) {
+  _inherits(Process, _Step);
 
   function Process() {
     _classCallCheck(this, Process);
@@ -34,34 +34,26 @@ var Process = function (_React$Component) {
   _createClass(Process, [{
     key: 'render',
     value: function render() {
-      var _Object$assign = Object.assign({}, {
-        selected: false,
-        selectItem: Function.prototype
-      }, this.props, {
-        style: _defaultStyle2.default
-      }),
-          height = _Object$assign.height,
-          width = _Object$assign.width,
-          x = _Object$assign.x,
-          y = _Object$assign.y,
-          selected = _Object$assign.selected,
-          selectItem = _Object$assign.selectItem,
-          style = _Object$assign.style;
+      var _props = this.props,
+          height = _props.height,
+          width = _props.width,
+          x = _props.x,
+          y = _props.y,
+          selected = _props.selected,
+          selectedColor = _props.selectedColor,
+          selectStep = _props.selectStep,
+          style = _props.style;
 
-      var onMouseDown = function onMouseDown(event) {
-        event.stopPropagation();
-        selectItem(!selected);
-      };
 
       return _react2.default.createElement(
         'g',
         {
-          onMouseDown: onMouseDown,
+          onMouseDown: selectStep(!selected),
           transform: 'translate(' + x + ',' + y + ')'
         },
         _react2.default.createElement('rect', {
           height: height,
-          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {}),
+          style: Object.assign({}, style, selected ? { stroke: selectedColor } : {}),
           width: width
         })
       );
@@ -69,6 +61,6 @@ var Process = function (_React$Component) {
   }]);
 
   return Process;
-}(_react2.default.Component);
+}(_Step3.default);
 
 exports.default = Process;

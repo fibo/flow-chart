@@ -10,21 +10,15 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Decision = require('./Decision');
+var _components = require('../components');
 
-var _Decision2 = _interopRequireDefault(_Decision);
-
-var _Process = require('./Process');
-
-var _Process2 = _interopRequireDefault(_Process);
-
-var _Terminator = require('./Terminator');
-
-var _Terminator2 = _interopRequireDefault(_Terminator);
+var _components2 = _interopRequireDefault(_components);
 
 var _DraggableToolbarIcon = require('./DraggableToolbarIcon');
 
 var _DraggableToolbarIcon2 = _interopRequireDefault(_DraggableToolbarIcon);
+
+var _types = require('../types');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33,8 +27,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var componets = { Terminator: _Terminator2.default, Decision: _Decision2.default, Process: _Process2.default };
 
 var Toolbar = function (_React$Component) {
   _inherits(Toolbar, _React$Component);
@@ -50,7 +42,6 @@ var Toolbar = function (_React$Component) {
     value: function render() {
       var _props = this.props,
           dropToolbarIcon = _props.dropToolbarIcon,
-          fontSize = _props.fontSize,
           height = _props.height,
           width = _props.width;
 
@@ -60,7 +51,6 @@ var Toolbar = function (_React$Component) {
         {
           style: {
             display: 'flex',
-            fontSize: fontSize,
             height: height,
             width: width
           }
@@ -70,12 +60,12 @@ var Toolbar = function (_React$Component) {
           {
             style: { display: 'flex' }
           },
-          Object.keys(componets).map(function (itemType) {
+          Object.keys(_components2.default).map(function (itemType) {
             return _react2.default.createElement(_DraggableToolbarIcon2.default, {
               key: itemType,
               dropToolbarIcon: dropToolbarIcon,
               height: height,
-              Item: componets[itemType],
+              Item: _components2.default[itemType],
               width: 1.618 * height
             });
           })

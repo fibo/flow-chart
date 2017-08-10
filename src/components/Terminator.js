@@ -1,8 +1,9 @@
+// @flow
 import React from 'react'
 
-import defaultStyle, { selectedColor } from './defaultStyle'
+import Step from './Step'
 
-export default class Terminator extends React.Component {
+export default class Terminator extends Step {
   render () {
     const {
       height,
@@ -10,14 +11,10 @@ export default class Terminator extends React.Component {
       x,
       y,
       selected,
-      selectItem,
+      selectedColor,
+      selectStep,
       style
-    } = Object.assign({}, {
-      selected: false,
-      selectItem: Function.prototype
-    }, this.props, {
-      style: defaultStyle
-    })
+    } = this.props
 
     const rectStyle = Object.assign({},
       style,
@@ -27,14 +24,9 @@ export default class Terminator extends React.Component {
 
     const halfH = height / 2
 
-    const onMouseDown = (event) => {
-      event.stopPropagation()
-      selectItem(!selected)
-    }
-
     return (
       <g
-        onMouseDown={onMouseDown}
+        onMouseDown={selectStep(!selected)}
         transform={`translate(${x},${y})`}
       >
         <rect

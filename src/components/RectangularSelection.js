@@ -1,6 +1,11 @@
+// @flow
 import React from 'react'
 
+import { Rectangle } from '../types'
+
 export default class RectangularSelection extends React.Component {
+  props: Rectangle
+
   render () {
     const {
       height,

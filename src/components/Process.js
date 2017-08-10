@@ -1,8 +1,9 @@
+// @flow
 import React from 'react'
 
-import defaultStyle, { selectedColor } from './defaultStyle'
+import Step from './Step'
 
-export default class Process extends React.Component {
+export default class Process extends Step {
   render () {
     const {
       height,
@@ -10,23 +11,14 @@ export default class Process extends React.Component {
       x,
       y,
       selected,
-      selectItem,
+      selectedColor,
+      selectStep,
       style
-    } = Object.assign({}, {
-      selected: false,
-      selectItem: Function.prototype
-    }, this.props, {
-      style: defaultStyle
-    })
-
-    const onMouseDown = (event) => {
-      event.stopPropagation()
-      selectItem(!selected)
-    }
+    } = this.props
 
     return (
       <g
-        onMouseDown={onMouseDown}
+        onMouseDown={selectStep(!selected)}
         transform={`translate(${x},${y})`}
       >
         <rect

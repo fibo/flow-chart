@@ -1,8 +1,17 @@
+// @flow
 import React from 'react'
 
-import defaultStyle from './defaultStyle'
+import { Area, FdropToolbarIcon } from '../types'
+
+import Step from './Step'
 
 export default class DraggableToolbarIcon extends React.Component {
+  props: Area & {
+  Item: Step,
+  dropToolbarIcon: FdropToolbarIcon
+}
+
+
   render () {
     const {
       dropToolbarIcon,
@@ -11,7 +20,7 @@ export default class DraggableToolbarIcon extends React.Component {
       width
     } = this.props
 
-    const margin = defaultStyle.strokeWidth
+    const margin = Item.defaultProps.style.strokeWidth
 
     return (
       <div

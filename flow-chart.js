@@ -16,17 +16,7 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _notDefined = require('not-defined');
-
-var _notDefined2 = _interopRequireDefault(_notDefined);
-
-var _defaultProps = require('./components/defaultProps');
-
-var _defaultProps2 = _interopRequireDefault(_defaultProps);
-
-var _defaultStyle = require('./components/defaultStyle');
-
-var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
+var _types = require('./types');
 
 var _Decision = require('./components/Decision');
 
@@ -36,13 +26,17 @@ var _Process = require('./components/Process');
 
 var _Process2 = _interopRequireDefault(_Process);
 
+var _Terminator = require('./components/Terminator');
+
+var _Terminator2 = _interopRequireDefault(_Terminator);
+
 var _RectangularSelection = require('./components/RectangularSelection');
 
 var _RectangularSelection2 = _interopRequireDefault(_RectangularSelection);
 
-var _Terminator = require('./components/Terminator');
+var _Step = require('./components/Step');
 
-var _Terminator2 = _interopRequireDefault(_Terminator);
+var _Step2 = _interopRequireDefault(_Step);
 
 var _Toolbar = require('./components/Toolbar');
 
@@ -64,7 +58,7 @@ var frame = function frame(_ref) {
   return function (_ref2) {
     var rectangularSelection = _ref2.rectangularSelection,
         selected = _ref2.selected,
-        selectItem = _ref2.selectItem;
+        selectStep = _ref2.selectStep;
     return _react2.default.createElement(
       'svg',
       {
@@ -76,20 +70,20 @@ var frame = function frame(_ref) {
       Object.keys(items.decision).map(function (key) {
         return _react2.default.createElement(_Decision2.default, _extends({ key: key,
           selected: selected[key],
-          selectItem: selectItem(key)
-        }, _defaultProps2.default, items.decision[key]));
+          selectStep: selectStep(key)
+        }, items.decision[key]));
       }),
       Object.keys(items.process).map(function (key) {
         return _react2.default.createElement(_Process2.default, _extends({ key: key,
           selected: selected[key],
-          selectItem: selectItem(key)
-        }, _defaultProps2.default, items.process[key]));
+          selectStep: selectStep(key)
+        }, items.process[key]));
       }),
       Object.keys(items.terminator).map(function (key) {
         return _react2.default.createElement(_Terminator2.default, _extends({ key: key,
           selected: selected[key],
-          selectItem: selectItem(key)
-        }, _defaultProps2.default, items.terminator[key]));
+          selectStep: selectStep(key)
+        }, items.terminator[key]));
       })
     );
   };
@@ -160,13 +154,11 @@ var FlowChart = function (_React$Component) {
 
       // Defaults.
 
-      if ((0, _notDefined2.default)(items.Decision)) items.Decision = {};
-      if ((0, _notDefined2.default)(items.Process)) items.Process = {};
-      if ((0, _notDefined2.default)(items.Terminator)) items.Terminator = {};
+      if (!items.decision) items.decision = {};
+      if (!items.process) items.process = {};
+      if (!items.terminator) items.terminator = {};
 
-      if ((0, _notDefined2.default)(style.fontSize)) style.fontSize = _defaultStyle2.default.fontSize;
-
-      var toolbarHeight = 2 * style.fontSize;
+      var toolbarHeight = 2 * _Step2.default.defaultProps.style.fontSize;
 
       var containerStyle = {
         boxShadow: isMouseOver ? '3px 4px 16px 0px rgba(0, 0, 0, 0.5)' : null,
@@ -188,9 +180,9 @@ var FlowChart = function (_React$Component) {
       var generateId = function generateId() {
         var id = randomString(4);
 
-        var diagram = Object.assign({ Decision: {} }, { Process: {} }, { Terminator: {} }, _this2.state.diagram);
+        var items = Object.assign({ decision: {} }, { process: {} }, { terminator: {} }, _this2.state.diagram.items);
 
-        var idExists = diagram.Decision[id] || diagram.Process[id] || diagram.Terminator[id];
+        var idExists = items.decision[id] || items.process[id] || items.terminator[id];
 
         return idExists ? generateId() : id;
       };
@@ -229,10 +221,10 @@ var FlowChart = function (_React$Component) {
             var _diagram = Object.assign({}, _this2.state.diagram);
             var itemType = Item.name.toLowerCase();
 
-            if ((0, _notDefined2.default)(_diagram.items[itemType])) _diagram.items[itemType] = {};
+            if (!_diagram.items[itemType]) _diagram.items[itemType] = {};
 
-            var x = coordinates.x - _defaultProps2.default.width / 2;
-            var y = coordinates.y - toolbarHeight - _defaultProps2.default.height / 2;
+            var x = coordinates.x - _Step2.default.defaultProps.width / 2;
+            var y = coordinates.y - toolbarHeight - _Step2.default.defaultProps.height / 2;
 
             _diagram.items[itemType][id] = { x: x, y: y };
 
@@ -285,17 +277,23 @@ var FlowChart = function (_React$Component) {
       };
 
       var onMouseUp = function onMouseUp() {
-        setState({ rectangularSelection: null });
+        setState({
+          rectangularSelection: null
+        });
       };
 
-      var selectItem = function selectItem(key) {
-        return function (ok) {
-          var item = {};
-          item[key] = ok;
+      var selectStep = function selectStep(key) {
+        return function (selected) {
+          return function (event) {
+            event.stopPropagation();
 
-          setState({
-            selected: Object.assign({}, _this2.state.selected, item)
-          });
+            var item = {};
+            item[key] = selected;
+
+            setState({
+              selected: Object.assign({}, _this2.state.selected, item)
+            });
+          };
         };
       };
       // Create an higher order component to be used as frame,
@@ -323,7 +321,7 @@ var FlowChart = function (_React$Component) {
         _react2.default.createElement(Frame, {
           rectangularSelection: rectangularSelection,
           selected: selected,
-          selectItem: selectItem
+          selectStep: selectStep
         })
       ) : _react2.default.createElement(Frame, null);
     }

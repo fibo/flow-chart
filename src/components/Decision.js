@@ -1,8 +1,9 @@
+// @flow
 import React from 'react'
 
-import defaultStyle, { selectedColor } from './defaultStyle'
+import Step from './Step'
 
-export default class Decision extends React.Component {
+export default class Decision extends Step {
   render () {
     const {
       height,
@@ -10,26 +11,17 @@ export default class Decision extends React.Component {
       x,
       y,
       selected,
-      selectItem,
+      selectedColor,
+      selectStep,
       style
-    } = Object.assign({}, {
-      selected: false,
-      selectItem: Function.prototype
-    }, this.props, {
-      style: defaultStyle
-    })
+    } = this.props
 
     const halfH = height / 2
     const halfW = width / 2
 
-    const onMouseDown = (event) => {
-      event.stopPropagation()
-      selectItem(!selected)
-    }
-
     return (
       <g
-        onMouseDown={onMouseDown}
+        onMouseDown={selectStep(!selected)}
         transform={`translate(${x},${y})`}
       >
         <path

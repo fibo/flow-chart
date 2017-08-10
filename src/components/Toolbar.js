@@ -1,17 +1,18 @@
+// @flow
 import React from 'react'
 
-import Decision from './Decision'
-import Process from './Process'
-import Terminator from './Terminator'
+import components from '../components'
 import DraggableToolbarIcon from './DraggableToolbarIcon'
-
-const componets = { Terminator, Decision, Process }
+import { Area, FdropToolbarIcon } from '../types'
 
 export default class Toolbar extends React.Component {
+  props: Area & {
+    dropToolbarIcon: FdropToolbarIcon
+  }
+
   render () {
     const {
       dropToolbarIcon,
-      fontSize,
       height,
       width
     } = this.props
@@ -20,7 +21,6 @@ export default class Toolbar extends React.Component {
       <div
         style={{
           display: 'flex',
-          fontSize,
           height,
           width
         }}
@@ -28,12 +28,12 @@ export default class Toolbar extends React.Component {
         <div
           style={{ display: 'flex' }}
         >
-          {Object.keys(componets).map(itemType => (
+          {Object.keys(components).map(itemType => (
             <DraggableToolbarIcon
               key={itemType}
               dropToolbarIcon={dropToolbarIcon}
               height={height}
-              Item={componets[itemType]}
+              Item={components[itemType]}
               width={1.618 * height}
             />
           ))}

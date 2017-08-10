@@ -10,9 +10,11 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _defaultStyle = require('./defaultStyle');
+var _types = require('../types');
 
-var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
+var _Step = require('./Step');
+
+var _Step2 = _interopRequireDefault(_Step);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -41,7 +43,7 @@ var DraggableToolbarIcon = function (_React$Component) {
           width = _props.width;
 
 
-      var margin = _defaultStyle2.default.strokeWidth;
+      var margin = Item.defaultProps.style.strokeWidth;
 
       return _react2.default.createElement(
         'div',
