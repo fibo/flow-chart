@@ -97,6 +97,7 @@ export default class FlowChart extends React.Component {
 
     const {
       diagram,
+      isMouseDown,
       isMouseOver,
       rectangularSelection,
       selected
@@ -211,6 +212,7 @@ export default class FlowChart extends React.Component {
       const coordinates = getCoordinates(event)
 
       setState({
+        isMouseDown: true,
         rectangularSelection: {
           x: coordinates.x,
           y: coordinates.y - toolbarHeight,
@@ -251,7 +253,10 @@ export default class FlowChart extends React.Component {
     }
 
     const onMouseUp = () => {
-      setState({ rectangularSelection: null })
+      setState({
+        isMouseDown: false,
+        rectangularSelection: null
+      })
     }
 
     const selectItem = (key) => (ok) => {

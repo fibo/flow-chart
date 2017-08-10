@@ -1,9 +1,5 @@
 import React from 'react'
 
-import {
-  strokeDasharraySelected
-} from '../utils/css'
-
 export default class RectangularSelection extends React.Component {
   render () {
     const {
@@ -20,14 +16,12 @@ export default class RectangularSelection extends React.Component {
       <rect
         transform={`translate(${x} ${y}) scale(${scaleX} ${scaleY})`}
         height={Math.abs(height)}
-        style={Object.assign({},
-          {
-            fill: 'transparent',
-            stroke: 'gray',
-            strokeWidth: 2
-          },
-          strokeDasharraySelected
-        )}
+        style={{
+          fill: 'transparent',
+          stroke: 'gray',
+          strokeDasharray: '10 10',
+          strokeWidth: 2
+        }}
         width={Math.abs(width)}
        />
     )
