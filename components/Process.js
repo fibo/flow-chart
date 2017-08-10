@@ -14,8 +14,6 @@ var _defaultStyle = require('./defaultStyle');
 
 var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
 
-var _css = require('../utils/css');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -63,7 +61,7 @@ var Process = function (_React$Component) {
         },
         _react2.default.createElement('rect', {
           height: height,
-          style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style),
+          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {}),
           width: width
         })
       );

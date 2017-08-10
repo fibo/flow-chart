@@ -1,17 +1,17 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", 'react', './defaultStyle', '../utils/css'], factory);
+    define(["exports", 'react', './defaultStyle'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('react'), require('./defaultStyle'), require('../utils/css'));
+    factory(exports, require('react'), require('./defaultStyle'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react, global.defaultStyle, global.css);
+    factory(mod.exports, global.react, global.defaultStyle);
     global.Decision = mod.exports;
   }
-})(this, function (exports, _react, _defaultStyle, _css) {
+})(this, function (exports, _react, _defaultStyle) {
   'use strict';
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -99,7 +99,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
           transform: 'translate(' + x + ',' + y + ')'
         }, _react2.default.createElement('path', {
           d: 'M0 ' + halfH + ' L' + halfW + ' 0 L' + width + ' ' + halfH + ' L' + halfW + ' ' + height + 'Z',
-          style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style)
+          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
         }));
       }
     }]);
@@ -110,7 +110,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   exports.default = Decision;
 });
 
-},{"../utils/css":40,"./defaultStyle":8,"react":39}],2:[function(require,module,exports){
+},{"./defaultStyle":8,"react":39}],2:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(["exports", 'react', './defaultStyle'], factory);
@@ -217,17 +217,17 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 },{"./defaultStyle":8,"react":39}],3:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", 'react', './defaultStyle', '../utils/css'], factory);
+    define(["exports", 'react', './defaultStyle'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('react'), require('./defaultStyle'), require('../utils/css'));
+    factory(exports, require('react'), require('./defaultStyle'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react, global.defaultStyle, global.css);
+    factory(mod.exports, global.react, global.defaultStyle);
     global.Process = mod.exports;
   }
-})(this, function (exports, _react, _defaultStyle, _css) {
+})(this, function (exports, _react, _defaultStyle) {
   'use strict';
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -312,7 +312,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
           transform: 'translate(' + x + ',' + y + ')'
         }, _react2.default.createElement('rect', {
           height: height,
-          style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style),
+          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {}),
           width: width
         }));
       }
@@ -324,7 +324,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   exports.default = Process;
 });
 
-},{"../utils/css":40,"./defaultStyle":8,"react":39}],4:[function(require,module,exports){
+},{"./defaultStyle":8,"react":39}],4:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(["exports", 'react', '../utils/css'], factory);
@@ -427,17 +427,17 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 },{"../utils/css":40,"react":39}],5:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", 'react', './defaultStyle', '../utils/css'], factory);
+    define(["exports", 'react', './defaultStyle'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('react'), require('./defaultStyle'), require('../utils/css'));
+    factory(exports, require('react'), require('./defaultStyle'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react, global.defaultStyle, global.css);
+    factory(mod.exports, global.react, global.defaultStyle);
     global.Terminator = mod.exports;
   }
-})(this, function (exports, _react, _defaultStyle, _css) {
+})(this, function (exports, _react, _defaultStyle) {
   'use strict';
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -512,9 +512,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
             selectItem = _Object$assign.selectItem,
             style = _Object$assign.style;
 
-        var rectStyle = Object.assign({}, style, {
-          strokeDasharray: width - height + ' ' + height
-        });
+        var rectStyle = Object.assign({}, style, { strokeDasharray: width - height + ' ' + height }, selected ? { stroke: _defaultStyle.selectedColor } : {});
 
         var halfH = height / 2;
 
@@ -529,14 +527,14 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
         }, _react2.default.createElement('rect', {
           x: halfH,
           height: height,
-          style: Object.assign({}, rectStyle, selected ? _css.strokeDasharraySelected : {}),
+          style: rectStyle,
           width: width - height
         }), _react2.default.createElement('path', {
           d: 'M' + halfH + ',0 A' + halfH + ',' + halfH + ' 0 0,0 ' + halfH + ',' + height,
-          style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style)
+          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
         }), _react2.default.createElement('path', {
           d: 'M' + (width - halfH) + ',0 A' + halfH + ',' + halfH + ' 0 0,1 ' + (width - halfH) + ',' + height,
-          style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style)
+          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
         }));
       }
     }]);
@@ -547,7 +545,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   exports.default = Terminator;
 });
 
-},{"../utils/css":40,"./defaultStyle":8,"react":39}],6:[function(require,module,exports){
+},{"./defaultStyle":8,"react":39}],6:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(["exports", 'react', './Decision', './Process', './Terminator', './DraggableToolbarIcon'], factory);
@@ -682,8 +680,8 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     value: true
   });
   var props = {
-    height: 20,
-    width: 100
+    height: 40,
+    width: 120
   };
 
   exports.default = props;
@@ -708,6 +706,8 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
+  var selectedColor = exports.selectedColor = 'tomato';
+
   var style = {
     fill: 'white',
     fontSize: 14,
@@ -20877,39 +20877,30 @@ if ("production" === 'production') {
 },{"./cjs/react.development.js":37,"./cjs/react.production.min.js":38}],40:[function(require,module,exports){
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['exports'], factory);
+    define([], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports);
+    factory();
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports);
+    factory();
     global.css = mod.exports;
   }
-})(this, function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var strokeDasharraySelected = exports.strokeDasharraySelected = {
-    strokeDasharray: '10 10'
-
-    // See https://stackoverflow.com/a/4407335/1217468
-    /* TODO use it or delete it
-    const none = 'none'
-    export const userSelectNone = {
-      WebkitTouchCallout: none,
-      WebkitUserSelect: none,
-      KhtmlUserSelect: none,
-      MozUserSelect: none,
-      msUserSelect: none,
-      userSelect: none
-    }
-    */
-
-  };
+})(this, function () {
+  // See https://stackoverflow.com/a/4407335/1217468
+  /* TODO use it or delete it
+  const none = 'none'
+  export const userSelectNone = {
+    WebkitTouchCallout: none,
+    WebkitUserSelect: none,
+    KhtmlUserSelect: none,
+    MozUserSelect: none,
+    msUserSelect: none,
+    userSelect: none
+  }
+  */
+  "use strict";
 });
 
 },{}],"flow-chart":[function(require,module,exports){

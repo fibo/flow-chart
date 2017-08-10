@@ -1,3 +1,5 @@
+export const selectedColor = 'tomato'
+
 const style = {
   fill: 'white',
   fontSize: 14,

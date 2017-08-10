@@ -25,8 +25,6 @@ var _defaultStyle = require('./defaultStyle');
 
 var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
 
-var _css = require('../utils/css');
-
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -88,7 +86,7 @@ var Decision = function (_React$Component) {
         transform: 'translate(' + x + ',' + y + ')'
       }, _react2.default.createElement('path', {
         d: 'M0 ' + halfH + ' L' + halfW + ' 0 L' + width + ' ' + halfH + ' L' + halfW + ' ' + height + 'Z',
-        style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style)
+        style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
       }));
     }
   }]);
@@ -98,7 +96,7 @@ var Decision = function (_React$Component) {
 
 exports.default = Decision;
 
-},{"../utils/css":43,"./defaultStyle":8,"react":42}],2:[function(require,module,exports){
+},{"./defaultStyle":8,"react":42}],2:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -215,8 +213,6 @@ var _defaultStyle = require('./defaultStyle');
 
 var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
 
-var _css = require('../utils/css');
-
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -275,7 +271,7 @@ var Process = function (_React$Component) {
         transform: 'translate(' + x + ',' + y + ')'
       }, _react2.default.createElement('rect', {
         height: height,
-        style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style),
+        style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {}),
         width: width
       }));
     }
@@ -286,7 +282,7 @@ var Process = function (_React$Component) {
 
 exports.default = Process;
 
-},{"../utils/css":43,"./defaultStyle":8,"react":42}],4:[function(require,module,exports){
+},{"./defaultStyle":8,"react":42}],4:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -399,8 +395,6 @@ var _defaultStyle = require('./defaultStyle');
 
 var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
 
-var _css = require('../utils/css');
-
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -449,9 +443,7 @@ var Terminator = function (_React$Component) {
           selectItem = _Object$assign.selectItem,
           style = _Object$assign.style;
 
-      var rectStyle = Object.assign({}, style, {
-        strokeDasharray: width - height + ' ' + height
-      });
+      var rectStyle = Object.assign({}, style, { strokeDasharray: width - height + ' ' + height }, selected ? { stroke: _defaultStyle.selectedColor } : {});
 
       var halfH = height / 2;
 
@@ -466,14 +458,14 @@ var Terminator = function (_React$Component) {
       }, _react2.default.createElement('rect', {
         x: halfH,
         height: height,
-        style: Object.assign({}, rectStyle, selected ? _css.strokeDasharraySelected : {}),
+        style: rectStyle,
         width: width - height
       }), _react2.default.createElement('path', {
         d: 'M' + halfH + ',0 A' + halfH + ',' + halfH + ' 0 0,0 ' + halfH + ',' + height,
-        style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style)
+        style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
       }), _react2.default.createElement('path', {
         d: 'M' + (width - halfH) + ',0 A' + halfH + ',' + halfH + ' 0 0,1 ' + (width - halfH) + ',' + height,
-        style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style)
+        style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
       }));
     }
   }]);
@@ -483,7 +475,7 @@ var Terminator = function (_React$Component) {
 
 exports.default = Terminator;
 
-},{"../utils/css":43,"./defaultStyle":8,"react":42}],6:[function(require,module,exports){
+},{"./defaultStyle":8,"react":42}],6:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -597,8 +589,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var props = {
-  height: 20,
-  width: 100
+  height: 40,
+  width: 120
 };
 
 exports.default = props;
@@ -609,6 +601,8 @@ exports.default = props;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var selectedColor = exports.selectedColor = 'tomato';
+
 var style = {
   fill: 'white',
   fontSize: 14,
@@ -21388,27 +21382,19 @@ if (process.env.NODE_ENV === 'production') {
 
 }).call(this,require('_process'))
 },{"./cjs/react.development.js":40,"./cjs/react.production.min.js":41,"_process":31}],43:[function(require,module,exports){
-'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var strokeDasharraySelected = exports.strokeDasharraySelected = {
-  strokeDasharray: '10 10'
-
-  // See https://stackoverflow.com/a/4407335/1217468
-  /* TODO use it or delete it
-  const none = 'none'
-  export const userSelectNone = {
-    WebkitTouchCallout: none,
-    WebkitUserSelect: none,
-    KhtmlUserSelect: none,
-    MozUserSelect: none,
-    msUserSelect: none,
-    userSelect: none
-  }
-  */
-
-};
+// See https://stackoverflow.com/a/4407335/1217468
+/* TODO use it or delete it
+const none = 'none'
+export const userSelectNone = {
+  WebkitTouchCallout: none,
+  WebkitUserSelect: none,
+  KhtmlUserSelect: none,
+  MozUserSelect: none,
+  msUserSelect: none,
+  userSelect: none
+}
+*/
+"use strict";
 
 },{}]},{},[9]);

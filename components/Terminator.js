@@ -14,8 +14,6 @@ var _defaultStyle = require('./defaultStyle');
 
 var _defaultStyle2 = _interopRequireDefault(_defaultStyle);
 
-var _css = require('../utils/css');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -50,9 +48,7 @@ var Terminator = function (_React$Component) {
           selectItem = _Object$assign.selectItem,
           style = _Object$assign.style;
 
-      var rectStyle = Object.assign({}, style, {
-        strokeDasharray: width - height + ' ' + height
-      });
+      var rectStyle = Object.assign({}, style, { strokeDasharray: width - height + ' ' + height }, selected ? { stroke: _defaultStyle.selectedColor } : {});
 
       var halfH = height / 2;
 
@@ -70,16 +66,16 @@ var Terminator = function (_React$Component) {
         _react2.default.createElement('rect', {
           x: halfH,
           height: height,
-          style: Object.assign({}, rectStyle, selected ? _css.strokeDasharraySelected : {}),
+          style: rectStyle,
           width: width - height
         }),
         _react2.default.createElement('path', {
           d: 'M' + halfH + ',0 A' + halfH + ',' + halfH + ' 0 0,0 ' + halfH + ',' + height,
-          style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style)
+          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
         }),
         _react2.default.createElement('path', {
           d: 'M' + (width - halfH) + ',0 A' + halfH + ',' + halfH + ' 0 0,1 ' + (width - halfH) + ',' + height,
-          style: Object.assign({}, selected ? _css.strokeDasharraySelected : {}, style)
+          style: Object.assign({}, style, selected ? { stroke: _defaultStyle.selectedColor } : {})
         })
       );
     }

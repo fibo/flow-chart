@@ -1,10 +1,6 @@
 import React from 'react'
 
-import defaultStyle from './defaultStyle'
-
-import {
-  strokeDasharraySelected
-} from '../utils/css'
+import defaultStyle, { selectedColor } from './defaultStyle'
 
 export default class Terminator extends React.Component {
   render () {
@@ -23,9 +19,11 @@ export default class Terminator extends React.Component {
       style: defaultStyle
     })
 
-    const rectStyle = Object.assign({}, style, {
-      strokeDasharray: `${width - height} ${height}`
-    })
+    const rectStyle = Object.assign({},
+      style,
+      { strokeDasharray: `${width - height} ${height}` },
+      (selected ? { stroke: selectedColor } : {})
+    )
 
     const halfH = height / 2
 
@@ -42,24 +40,21 @@ export default class Terminator extends React.Component {
         <rect
           x={halfH}
           height={height}
-          style={Object.assign({},
-            rectStyle,
-            (selected ? strokeDasharraySelected : {})
-          )}
+          style={rectStyle}
           width={width - height}
         />
         <path
           d={`M${halfH},0 A${halfH},${halfH} 0 0,0 ${halfH},${height}`}
           style={Object.assign({},
-            (selected ? strokeDasharraySelected : {}),
-            style
+            style,
+            (selected ? { stroke: selectedColor } : {})
           )}
         />
         <path
           d={`M${width - halfH},0 A${halfH},${halfH} 0 0,1 ${width - halfH},${height}`}
           style={Object.assign({},
-            (selected ? strokeDasharraySelected : {}),
-            style
+            style,
+            (selected ? { stroke: selectedColor } : {})
           )}
         />
       </g>

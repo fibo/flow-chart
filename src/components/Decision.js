@@ -1,10 +1,6 @@
 import React from 'react'
 
-import defaultStyle from './defaultStyle'
-
-import {
-  strokeDasharraySelected
-} from '../utils/css'
+import defaultStyle, { selectedColor } from './defaultStyle'
 
 export default class Decision extends React.Component {
   render () {
@@ -39,8 +35,8 @@ export default class Decision extends React.Component {
         <path
           d={`M0 ${halfH} L${halfW} 0 L${width} ${halfH} L${halfW} ${height}Z`}
           style={Object.assign({},
-            (selected ? strokeDasharraySelected : {}),
-            style
+            style,
+            (selected ? { stroke: selectedColor } : {})
           )}
         />
       </g>
