@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import bindme from 'bindme'
 
 import {
   Point,
@@ -91,6 +92,14 @@ export default class FlowChart extends React.Component {
       scroll: { x: 0, y: 0 },
       selected: {}
     }
+
+    bindme(this,
+      'onMouseDown',
+      'onMouseEnter',
+      'onMouseLeave',
+      'onMouseMove',
+      'onMouseUp'
+    )
   }
 
   componentDidMount () {
@@ -111,6 +120,148 @@ export default class FlowChart extends React.Component {
     setState({
       offset,
       scroll
+    })
+  }
+
+  getCoordinates (event) {
+    const {
+      offset,
+      scroll
+    } = this.state
+
+    return {
+      x: event.clientX - offset.x + scroll.x,
+      y: event.clientY - offset.y + scroll.y
+    }
+  }
+
+  onMouseDown (event) {
+    const {
+      toolbarHeight
+    } = this.state
+
+    const coordinates = this.getCoordinates(event)
+
+    this.setState({
+      isMouseDown: true,
+      rectangularSelection: {
+        x: coordinates.x,
+        y: coordinates.y - toolbarHeight,
+        height: 0,
+        width: 0
+      },
+      selected: {}
+    })
+  }
+
+  onMouseEnter () {
+    this.setState({
+      isMouseOver: true,
+      rectangularSelection: null
+    })
+  }
+
+  onMouseLeave () {
+    this.setState({
+      isMouseOver: false,
+      rectangularSelection: null
+    })
+  }
+
+  onMouseMove (event) {
+    const {
+      diagram,
+      dragging,
+      isMouseDown,
+      rectangularSelection,
+      selected,
+      toolbarHeight
+    } = this.state
+
+    const coordinates = this.getCoordinates(event)
+    const draggedItems = Object.assign({}, diagram.items)
+
+    if (Object.keys(selected).length > 0) {
+      if (isMouseDown && dragging) {
+        const deltaX = coordinates.x - dragging.x
+        const deltaY = coordinates.y - dragging.y
+
+        Object.keys(selected).forEach((key) => {
+          Object.keys(draggedItems).forEach((itemType) => {
+            if (draggedItems[itemType][key]) {
+              draggedItems[itemType][key].x += deltaX
+              draggedItems[itemType][key].y += deltaY
+            }
+          })
+        })
+
+        this.setState({
+          dragging: coordinates,
+          items: draggedItems
+        })
+      } else {
+        this.setState({ dragging: coordinates })
+      }
+    }
+
+    if (rectangularSelection) {
+      this.setState({
+        rectangularSelection: {
+          x: rectangularSelection.x,
+          y: rectangularSelection.y,
+          height: (coordinates.y - toolbarHeight - rectangularSelection.y),
+          width: (coordinates.x - rectangularSelection.x)
+        }
+      })
+    }
+  }
+
+  onMouseUp () {
+    const {
+      diagram,
+      rectangularSelection
+    } = this.state
+
+    const {
+      items
+    } = diagram
+
+    let selected = {}
+
+    if (rectangularSelection) {
+      Object.keys(items).forEach((itemType) => {
+        Object.keys(items[itemType]).forEach((key) => {
+          const {
+            x, y, height, width
+          } = Object.assign({},
+            Step.defaultProps,
+            items[itemType][key]
+          )
+
+          // Consider when rectangular selection is reflected.
+          const boundsX = rectangularSelection.width >= 0 ? rectangularSelection.x : rectangularSelection.x + rectangularSelection.width
+          const boundsY = rectangularSelection.height >= 0 ? rectangularSelection.y : rectangularSelection.y + rectangularSelection.height
+          const boundsH = Math.abs(rectangularSelection.height)
+          const boundsW = Math.abs(rectangularSelection.width)
+
+          const isInside = (
+            (x >= boundsX) &&
+            (y >= boundsY) &&
+            (height <= boundsH) &&
+            (width <= boundsW)
+          )
+
+          if (isInside) {
+            selected[key] = true
+          }
+        })
+      })
+    }
+
+    this.setState({
+      isMouseDown: false,
+      rectangularSelection: null,
+      selected
     })
   }
 
@@ -184,20 +335,6 @@ export default class FlowChart extends React.Component {
       return idExists ? generateId() : id
     }
 
-    // Events.
-
-    const getCoordinates = (event) => {
-      const {
-        offset,
-        scroll
-      } = this.state
-
-      return {
-        x: event.clientX - offset.x + scroll.x,
-        y: event.clientY - offset.y + scroll.y
-      }
-    }
-
     const isInsideFlowChart = (coordinates) => {
       const {
         offset,
@@ -231,115 +368,6 @@ export default class FlowChart extends React.Component {
 
         setState({ diagram })
       }
-    }
-
-    const onMouseDown = (event) => {
-      const coordinates = getCoordinates(event)
-
-      setState({
-        isMouseDown: true,
-        rectangularSelection: {
-          x: coordinates.x,
-          y: coordinates.y - toolbarHeight,
-          height: 0,
-          width: 0
-        },
-        selected: {}
-      })
-    }
-
-    const onMouseEnter = () => {
-      setState({
-        isMouseOver: true,
-        rectangularSelection: null
-      })
-    }
-
-    const onMouseLeave = () => {
-      setState({
-        isMouseOver: false,
-        rectangularSelection: null
-      })
-    }
-
-    const onMouseMove = (event) => {
-      const coordinates = getCoordinates(event)
-      const draggedItems = Object.assign({}, items)
-
-      console.log(isMouseDown)
-      if (Object.keys(selected).length > 0) {
-        if (isMouseDown && dragging) {
-          const deltaX = coordinates.x - dragging.x
-          const deltaY = coordinates.y - dragging.y
-
-          Object.keys(selected).forEach((key) => {
-            Object.keys(draggedItems).forEach((itemType) => {
-              if (draggedItems[itemType][key]) {
-                draggedItems[itemType][key].x += deltaX
-                draggedItems[itemType][key].y += deltaY
-              }
-            })
-          })
-
-          setState({
-            dragging: coordinates,
-            items: draggedItems
-          })
-        } else {
-          setState({ dragging: coordinates })
-        }
-      }
-
-      if (rectangularSelection) {
-        setState({
-          rectangularSelection: {
-            x: rectangularSelection.x,
-            y: rectangularSelection.y,
-            height: (coordinates.y - toolbarHeight - rectangularSelection.y),
-            width: (coordinates.x - rectangularSelection.x)
-          }
-        })
-      }
-    }
-
-    const onMouseUp = () => {
-      let selected = {}
-
-      if (rectangularSelection) {
-        Object.keys(items).forEach((itemType) => {
-          Object.keys(items[itemType]).forEach((key) => {
-            const {
-              x, y, height, width
-            } = Object.assign({},
-              Step.defaultProps,
-              items[itemType][key]
-            )
-
-            // Consider when rectangular selection is reflected.
-            const boundsX = rectangularSelection.width >= 0 ? rectangularSelection.x : rectangularSelection.x + rectangularSelection.width
-            const boundsY = rectangularSelection.height >= 0 ? rectangularSelection.y : rectangularSelection.y + rectangularSelection.height
-            const boundsH = Math.abs(rectangularSelection.height)
-            const boundsW = Math.abs(rectangularSelection.width)
-
-            const isInside = (
-              (x >= boundsX) &&
-              (y >= boundsY) &&
-              (height <= boundsH) &&
-              (width <= boundsW)
-            )
-
-            if (isInside) {
-              selected[key] = true
-            }
-          })
-        })
-      }
-
-      setState({
-        isMouseDown: false,
-        rectangularSelection: null,
-        selected
-      })
     }
 
     const selectStep = (key) => (event) => {
@@ -376,11 +404,11 @@ export default class FlowChart extends React.Component {
     return (
       editable ? (
         <div
-          onMouseDown={onMouseDown}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          onMouseMove={onMouseMove}
-          onMouseUp={onMouseUp}
+          onMouseDown={this.onMouseDown}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+          onMouseMove={this.onMouseMove}
+          onMouseUp={this.onMouseUp}
           style={containerStyle}
         >
           <Toolbar
