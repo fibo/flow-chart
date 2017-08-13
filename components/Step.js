@@ -36,6 +36,10 @@ Step.defaultProps = {
   selected: false,
   selectedColor: 'tomato',
   selectStep: Function.prototype,
+  stopDragging: Function.prototype,
+  stopPropagation: function stopPropagation(event) {
+    event.stopPropagation();
+  },
   style: {
     fill: 'white',
     fontSize: 14,

@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -16,23 +16,15 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _bindme = require('bindme');
+
+var _bindme2 = _interopRequireDefault(_bindme);
+
 var _types = require('./types');
 
-var _Decision = require('./components/Decision');
+var _Canvas = require('./components/Canvas');
 
-var _Decision2 = _interopRequireDefault(_Decision);
-
-var _Process = require('./components/Process');
-
-var _Process2 = _interopRequireDefault(_Process);
-
-var _Terminator = require('./components/Terminator');
-
-var _Terminator2 = _interopRequireDefault(_Terminator);
-
-var _RectangularSelection = require('./components/RectangularSelection');
-
-var _RectangularSelection2 = _interopRequireDefault(_RectangularSelection);
+var _Canvas2 = _interopRequireDefault(_Canvas);
 
 var _Step = require('./components/Step');
 
@@ -42,6 +34,10 @@ var _Toolbar = require('./components/Toolbar');
 
 var _Toolbar2 = _interopRequireDefault(_Toolbar);
 
+var _randomString = require('./utils/randomString');
+
+var _randomString2 = _interopRequireDefault(_randomString);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -49,45 +45,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var frame = function frame(_ref) {
-  var height = _ref.height,
-      width = _ref.width,
-      style = _ref.style,
-      items = _ref.items;
-  return function (_ref2) {
-    var rectangularSelection = _ref2.rectangularSelection,
-        selected = _ref2.selected,
-        selectStep = _ref2.selectStep;
-    return _react2.default.createElement(
-      'svg',
-      {
-        height: height,
-        width: width,
-        style: style
-      },
-      rectangularSelection ? _react2.default.createElement(_RectangularSelection2.default, rectangularSelection) : null,
-      Object.keys(items.decision).map(function (key) {
-        return _react2.default.createElement(_Decision2.default, _extends({ key: key,
-          selected: selected[key],
-          selectStep: selectStep(key)
-        }, items.decision[key]));
-      }),
-      Object.keys(items.process).map(function (key) {
-        return _react2.default.createElement(_Process2.default, _extends({ key: key,
-          selected: selected[key],
-          selectStep: selectStep(key)
-        }, items.process[key]));
-      }),
-      Object.keys(items.terminator).map(function (key) {
-        return _react2.default.createElement(_Terminator2.default, _extends({ key: key,
-          selected: selected[key],
-          selectStep: selectStep(key)
-        }, items.terminator[key]));
-      })
-    );
-  };
-};
 
 var FlowChart = function (_React$Component) {
   _inherits(FlowChart, _React$Component);
@@ -99,21 +56,24 @@ var FlowChart = function (_React$Component) {
 
     _this.state = {
       diagram: props.diagram,
+      dragging: null,
+      isMouseDown: false,
       isMouseMoving: false,
       isMouseOver: false,
       offset: { x: 0, y: 0 },
       rectangularSelection: null,
       scroll: { x: 0, y: 0 },
-      selected: {}
+      selected: {},
+      toolbarHeight: 2 * _Step2.default.defaultProps.style.fontSize
     };
+
+    (0, _bindme2.default)(_this, 'dropToolbarIcon', 'onMouseDown', 'onMouseEnter', 'onMouseLeave', 'onMouseMove', 'onMouseUp', 'selectStep', 'stopDragging');
     return _this;
   }
 
   _createClass(FlowChart, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var setState = this.setState.bind(this);
-
       var container = _reactDom2.default.findDOMNode(this).parentNode;
 
       var offset = {
@@ -126,31 +86,223 @@ var FlowChart = function (_React$Component) {
         y: window.scrollY
       };
 
-      setState({
+      this.setState({
         offset: offset,
         scroll: scroll
       });
     }
   }, {
-    key: 'render',
-    value: function render() {
+    key: 'dropToolbarIcon',
+    value: function dropToolbarIcon(Item) {
       var _this2 = this;
 
+      return function (event) {
+        var toolbarHeight = _this2.state.toolbarHeight;
+
+
+        var coordinates = _this2.getCoordinates(event);
+
+        // Create item if dropped inside flowchart.
+        if (_this2.isInsideFlowChart(coordinates)) {
+          var id = _this2.generateId();
+
+          var _diagram = Object.assign({}, _this2.state.diagram);
+          var itemType = Item.name.toLowerCase();
+
+          if (!_diagram.items[itemType]) _diagram.items[itemType] = {};
+
+          var x = coordinates.x - _Step2.default.defaultProps.width / 2;
+          var y = coordinates.y - toolbarHeight - _Step2.default.defaultProps.height / 2;
+
+          _diagram.items[itemType][id] = { x: x, y: y };
+
+          _this2.setState({ diagram: _diagram });
+        }
+      };
+    }
+  }, {
+    key: 'generateId',
+    value: function generateId() {
+      var id = (0, _randomString2.default)(4);
+
+      var items = Object.assign({ decision: {} }, { process: {} }, { terminator: {} }, this.state.diagram.items);
+
+      var idExists = items.decision[id] || items.process[id] || items.terminator[id];
+
+      return idExists ? this.generateId() : id;
+    }
+  }, {
+    key: 'getCoordinates',
+    value: function getCoordinates(event) {
+      var _state = this.state,
+          offset = _state.offset,
+          scroll = _state.scroll;
+
+
+      return {
+        x: event.clientX - offset.x + scroll.x,
+        y: event.clientY - offset.y + scroll.y
+      };
+    }
+  }, {
+    key: 'isInsideFlowChart',
+    value: function isInsideFlowChart(coordinates) {
+      var _state2 = this.state,
+          diagram = _state2.diagram,
+          offset = _state2.offset,
+          scroll = _state2.scroll,
+          toolbarHeight = _state2.toolbarHeight;
+      var height = diagram.height,
+          width = diagram.width;
+
+
+      return coordinates.x > offset.x + scroll.x && coordinates.x < offset.x + scroll.x + width && coordinates.y > offset.y + scroll.y + toolbarHeight && coordinates.y < offset.y + scroll.y + height;
+    }
+  }, {
+    key: 'onMouseDown',
+    value: function onMouseDown(event) {
+      var toolbarHeight = this.state.toolbarHeight;
+
+
+      var coordinates = this.getCoordinates(event);
+
+      var rectangularSelection = this.isInsideFlowChart(coordinates) ? {
+        x: coordinates.x,
+        y: coordinates.y - toolbarHeight,
+        height: 0,
+        width: 0
+      } : null;
+
+      this.setState({
+        isMouseDown: true,
+        rectangularSelection: rectangularSelection,
+        selected: {}
+      });
+    }
+  }, {
+    key: 'onMouseEnter',
+    value: function onMouseEnter() {
+      this.setState({
+        isMouseOver: true,
+        rectangularSelection: null
+      });
+    }
+  }, {
+    key: 'onMouseLeave',
+    value: function onMouseLeave() {
+      this.setState({
+        isMouseOver: false,
+        rectangularSelection: null
+      });
+    }
+  }, {
+    key: 'onMouseMove',
+    value: function onMouseMove(event) {
+      var _state3 = this.state,
+          diagram = _state3.diagram,
+          dragging = _state3.dragging,
+          isMouseDown = _state3.isMouseDown,
+          rectangularSelection = _state3.rectangularSelection,
+          selected = _state3.selected,
+          toolbarHeight = _state3.toolbarHeight;
+
+
+      var coordinates = this.getCoordinates(event);
+      var draggedItems = Object.assign({}, diagram.items);
+
+      if (Object.keys(selected).length > 0) {
+        if (isMouseDown && dragging) {
+          var deltaX = coordinates.x - dragging.x;
+          var deltaY = coordinates.y - dragging.y;
+
+          Object.keys(selected).forEach(function (key) {
+            Object.keys(draggedItems).forEach(function (itemType) {
+              if (draggedItems[itemType][key]) {
+                draggedItems[itemType][key].x += deltaX;
+                draggedItems[itemType][key].y += deltaY;
+              }
+            });
+          });
+
+          this.setState({
+            dragging: coordinates,
+            items: draggedItems
+          });
+        } else {
+          this.setState({ dragging: coordinates });
+        }
+      }
+
+      if (rectangularSelection) {
+        this.setState({
+          rectangularSelection: {
+            x: rectangularSelection.x,
+            y: rectangularSelection.y,
+            height: coordinates.y - toolbarHeight - rectangularSelection.y,
+            width: coordinates.x - rectangularSelection.x
+          }
+        });
+      }
+    }
+  }, {
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      var _state4 = this.state,
+          diagram = _state4.diagram,
+          rectangularSelection = _state4.rectangularSelection;
+      var items = diagram.items;
+
+
+      var selected = {};
+
+      if (rectangularSelection) {
+        Object.keys(items).forEach(function (itemType) {
+          Object.keys(items[itemType]).forEach(function (key) {
+            var _Object$assign = Object.assign({}, _Step2.default.defaultProps, items[itemType][key]),
+                x = _Object$assign.x,
+                y = _Object$assign.y,
+                height = _Object$assign.height,
+                width = _Object$assign.width;
+
+            // Consider when rectangular selection is reflected.
+
+
+            var boundsX = rectangularSelection.width >= 0 ? rectangularSelection.x : rectangularSelection.x + rectangularSelection.width;
+            var boundsY = rectangularSelection.height >= 0 ? rectangularSelection.y : rectangularSelection.y + rectangularSelection.height;
+            var boundsH = Math.abs(rectangularSelection.height);
+            var boundsW = Math.abs(rectangularSelection.width);
+
+            var isInside = x >= boundsX && y >= boundsY && height <= boundsH && width <= boundsW;
+
+            if (isInside) {
+              selected[key] = true;
+            }
+          });
+        });
+      }
+
+      this.setState({
+        isMouseDown: false,
+        rectangularSelection: null,
+        selected: selected
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
       // State and props.
 
       var editable = this.props.editable;
-      var _state = this.state,
-          diagram = _state.diagram,
-          isMouseOver = _state.isMouseOver,
-          rectangularSelection = _state.rectangularSelection,
-          selected = _state.selected;
+      var _state5 = this.state,
+          diagram = _state5.diagram,
+          isMouseOver = _state5.isMouseOver,
+          rectangularSelection = _state5.rectangularSelection,
+          selected = _state5.selected,
+          toolbarHeight = _state5.toolbarHeight;
       var items = diagram.items,
           style = diagram.style,
           height = diagram.height,
           width = diagram.width;
-
-
-      var setState = this.setState.bind(this);
 
       // Defaults.
 
@@ -158,172 +310,68 @@ var FlowChart = function (_React$Component) {
       if (!items.process) items.process = {};
       if (!items.terminator) items.terminator = {};
 
-      var toolbarHeight = 2 * _Step2.default.defaultProps.style.fontSize;
-
       var containerStyle = {
         boxShadow: isMouseOver ? '3px 4px 16px 0px rgba(0, 0, 0, 0.5)' : null,
         height: toolbarHeight + height,
         width: width
-
-        // Utils
-
-      };var randomString = function randomString(length) {
-        var result = '';
-
-        while (result.length < length) {
-          result += String.fromCharCode(97 + Math.floor(Math.random() * 26));
-        }
-
-        return result;
       };
 
-      var generateId = function generateId() {
-        var id = randomString(4);
-
-        var items = Object.assign({ decision: {} }, { process: {} }, { terminator: {} }, _this2.state.diagram.items);
-
-        var idExists = items.decision[id] || items.process[id] || items.terminator[id];
-
-        return idExists ? generateId() : id;
-      };
-
-      // Events.
-
-      var getCoordinates = function getCoordinates(event) {
-        var _state2 = _this2.state,
-            offset = _state2.offset,
-            scroll = _state2.scroll;
-
-
-        return {
-          x: event.clientX - offset.x + scroll.x,
-          y: event.clientY - offset.y + scroll.y
-        };
-      };
-
-      var isInsideFlowChart = function isInsideFlowChart(coordinates) {
-        var _state3 = _this2.state,
-            offset = _state3.offset,
-            scroll = _state3.scroll;
-
-
-        return coordinates.x > offset.x + scroll.x && coordinates.x < offset.x + scroll.x + width && coordinates.y > offset.y + scroll.y + toolbarHeight && coordinates.y < offset.y + scroll.y + height;
-      };
-
-      var dropToolbarIcon = function dropToolbarIcon(Item) {
-        return function (event) {
-          var coordinates = getCoordinates(event);
-
-          // Create item if dropped inside flowchart.
-          if (isInsideFlowChart(coordinates)) {
-            var id = generateId();
-
-            var _diagram = Object.assign({}, _this2.state.diagram);
-            var itemType = Item.name.toLowerCase();
-
-            if (!_diagram.items[itemType]) _diagram.items[itemType] = {};
-
-            var x = coordinates.x - _Step2.default.defaultProps.width / 2;
-            var y = coordinates.y - toolbarHeight - _Step2.default.defaultProps.height / 2;
-
-            _diagram.items[itemType][id] = { x: x, y: y };
-
-            setState({ diagram: _diagram });
-          }
-        };
-      };
-
-      var onMouseDown = function onMouseDown(event) {
-        var coordinates = getCoordinates(event);
-
-        setState({
-          rectangularSelection: {
-            x: coordinates.x,
-            y: coordinates.y - toolbarHeight,
-            height: 0,
-            width: 0
-          },
-          selected: {}
-        });
-      };
-
-      var onMouseEnter = function onMouseEnter() {
-        setState({
-          isMouseOver: true,
-          rectangularSelection: null
-        });
-      };
-
-      var onMouseLeave = function onMouseLeave() {
-        setState({
-          isMouseOver: false,
-          rectangularSelection: null
-        });
-      };
-
-      var onMouseMove = function onMouseMove(event) {
-        var coordinates = getCoordinates(event);
-
-        if (rectangularSelection) {
-          setState({
-            rectangularSelection: {
-              x: rectangularSelection.x,
-              y: rectangularSelection.y,
-              height: coordinates.y - toolbarHeight - rectangularSelection.y,
-              width: coordinates.x - rectangularSelection.x
-            }
-          });
-        }
-      };
-
-      var onMouseUp = function onMouseUp() {
-        setState({
-          rectangularSelection: null
-        });
-      };
-
-      var selectStep = function selectStep(key) {
-        return function (selected) {
-          return function (event) {
-            event.stopPropagation();
-
-            var item = {};
-            item[key] = selected;
-
-            setState({
-              selected: Object.assign({}, _this2.state.selected, item)
-            });
-          };
-        };
-      };
-      // Create an higher order component to be used as frame,
-      // it appears twice in the JSX below depending if the FlowChart
-      // is editable or not.
-
-      var Frame = frame({ height: height, width: width, style: style, items: items });
+      var commonCanvasProps = { height: height, width: width, style: style, items: items };
 
       return editable ? _react2.default.createElement(
         'div',
         {
-          onMouseDown: onMouseDown,
-          onMouseEnter: onMouseEnter,
-          onMouseLeave: onMouseLeave,
-          onMouseMove: onMouseMove,
-          onMouseUp: onMouseUp,
+          onMouseDown: this.onMouseDown,
+          onMouseEnter: this.onMouseEnter,
+          onMouseLeave: this.onMouseLeave,
+          onMouseMove: this.onMouseMove,
+          onMouseUp: this.onMouseUp,
           style: containerStyle
         },
         _react2.default.createElement(_Toolbar2.default, {
-          dropToolbarIcon: dropToolbarIcon,
+          dropToolbarIcon: this.dropToolbarIcon,
           fontSize: style.fontSize,
           height: toolbarHeight,
           width: width
         }),
-        _react2.default.createElement(Frame, {
+        _react2.default.createElement(_Canvas2.default, _extends({}, commonCanvasProps, {
           rectangularSelection: rectangularSelection,
           selected: selected,
-          selectStep: selectStep
-        })
-      ) : _react2.default.createElement(Frame, null);
+          selectStep: this.selectStep,
+          stopDragging: this.stopDragging
+        }))
+      ) : _react2.default.createElement(_Canvas2.default, commonCanvasProps);
+    }
+  }, {
+    key: 'selectStep',
+    value: function selectStep(key) {
+      var _this3 = this;
+
+      return function (event) {
+        var selected = _this3.state.selected;
+
+
+        event.stopPropagation();
+
+        if (selected[key]) return;
+
+        var item = {};
+        item[key] = true;
+
+        _this3.setState({
+          isMouseDown: true,
+          selected: item
+        });
+      };
+    }
+  }, {
+    key: 'stopDragging',
+    value: function stopDragging(event) {
+      this.setState({
+        dragging: null,
+        isMouseDown: false,
+        rectangularSelection: null
+      });
     }
   }]);
 

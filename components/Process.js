@@ -42,13 +42,15 @@ var Process = function (_Step) {
           selected = _props.selected,
           selectedColor = _props.selectedColor,
           selectStep = _props.selectStep,
+          stopDragging = _props.stopDragging,
           style = _props.style;
 
 
       return _react2.default.createElement(
         'g',
         {
-          onMouseDown: selectStep(!selected),
+          onMouseUp: stopDragging,
+          onMouseDown: selectStep,
           transform: 'translate(' + x + ',' + y + ')'
         },
         _react2.default.createElement('rect', {

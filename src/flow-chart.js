@@ -300,8 +300,6 @@ export default class FlowChart extends React.Component {
 
     const {
       diagram,
-      dragging,
-      isMouseDown,
       isMouseOver,
       rectangularSelection,
       selected,
@@ -353,7 +351,7 @@ export default class FlowChart extends React.Component {
             stopDragging={this.stopDragging}
           />
         </div>
-      ) : <Canvas {...commonCanvasProps}/>
+      ) : <Canvas {...commonCanvasProps} />
     )
   }
 
@@ -378,8 +376,6 @@ export default class FlowChart extends React.Component {
   }
 
   stopDragging (event) {
-    event.stopPropagation()
-
     this.setState({
       dragging: null,
       isMouseDown: false,

@@ -42,6 +42,7 @@ var Terminator = function (_Step) {
           selected = _props.selected,
           selectedColor = _props.selectedColor,
           selectStep = _props.selectStep,
+          stopDragging = _props.stopDragging,
           style = _props.style;
 
 
@@ -52,7 +53,8 @@ var Terminator = function (_Step) {
       return _react2.default.createElement(
         'g',
         {
-          onMouseDown: selectStep(!selected),
+          onMouseDown: selectStep,
+          onMouseUp: stopDragging,
           transform: 'translate(' + x + ',' + y + ')'
         },
         _react2.default.createElement('rect', {
