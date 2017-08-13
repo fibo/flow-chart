@@ -7,56 +7,11 @@ import {
   Rectangle
 } from './types'
 
-import Decision from './components/Decision'
-import Process from './components/Process'
-import Terminator from './components/Terminator'
-
-import RectangularSelection from './components/RectangularSelection'
+import Canvas from './components/Canvas'
 import Step from './components/Step'
 import Toolbar from './components/Toolbar'
 
 import randomString from './utils/randomString'
-
-const frame = ({ height, width, style, items }) => ({
-  rectangularSelection,
-  selected,
-  selectStep,
-  stopDragging
-}) => (
-  <svg
-    height={height}
-    width={width}
-    style={style}
-  >
-    {rectangularSelection
-      ? <RectangularSelection {...rectangularSelection} />
-        : null}
-    {Object.keys(items.decision).map(key => (
-      <Decision key={key}
-        selected={selected[key]}
-        selectStep={selectStep(key)}
-        stopDragging={stopDragging}
-        {...items.decision[key]}
-      />
-    ))}
-    {Object.keys(items.process).map(key => (
-      <Process key={key}
-        selected={selected[key]}
-        selectStep={selectStep(key)}
-        stopDragging={stopDragging}
-        {...items.process[key]}
-      />
-    ))}
-    {Object.keys(items.terminator).map(key => (
-      <Terminator key={key}
-        selected={selected[key]}
-        selectStep={selectStep(key)}
-        stopDragging={stopDragging}
-        {...items.terminator[key]}
-      />
-    ))}
-  </svg>
-)
 
 export default class FlowChart extends React.Component {
   state: {
@@ -195,12 +150,6 @@ export default class FlowChart extends React.Component {
     } = this.state
 
     const { height, width } = diagram
-
-    console.log(coordinates, offset, scroll, height, width, toolbarHeight)
-    console.log(coordinates.x > offset.x + scroll.x)
-    console.log(coordinates.x < offset.x + scroll.x + width)
-    console.log(coordinates.y > offset.y + scroll.y + toolbarHeight)
-    console.log(coordinates.y < offset.y + scroll.y + height)
 
     return (
       (coordinates.x > offset.x + scroll.x) &&
@@ -378,11 +327,7 @@ export default class FlowChart extends React.Component {
       width
     }
 
-    // Create an higher order component to be used as frame,
-    // it appears twice in the JSX below depending if the FlowChart
-    // is editable or not.
-
-    const Frame = frame({height, width, style, items})
+    const commonCanvasProps = {height, width, style, items}
 
     return (
       editable ? (
@@ -400,14 +345,15 @@ export default class FlowChart extends React.Component {
             height={toolbarHeight}
             width={width}
           />
-          <Frame
+          <Canvas
+            {...commonCanvasProps}
             rectangularSelection={rectangularSelection}
             selected={selected}
             selectStep={this.selectStep}
             stopDragging={this.stopDragging}
           />
         </div>
-      ) : <Frame />
+      ) : <Canvas {...commonCanvasProps}/>
     )
   }
 
@@ -437,8 +383,7 @@ export default class FlowChart extends React.Component {
     this.setState({
       dragging: null,
       isMouseDown: false,
-      rectangularSelection: null,
-      selected: {}
+      rectangularSelection: null
     })
   }
 }
