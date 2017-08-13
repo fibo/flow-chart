@@ -1179,7 +1179,6 @@ var FlowChart = function (_React$Component) {
         style: containerStyle
       }, _react2.default.createElement(_Toolbar2.default, {
         dropToolbarIcon: this.dropToolbarIcon,
-        fontSize: style.fontSize,
         height: toolbarHeight,
         width: width
       }), _react2.default.createElement(_Canvas2.default, _extends({}, commonCanvasProps, {

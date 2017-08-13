@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import ReactDOM from 'react-dom'
 import bindme from 'bindme'
@@ -339,7 +340,6 @@ export default class FlowChart extends React.Component {
         >
           <Toolbar
             dropToolbarIcon={this.dropToolbarIcon}
-            fontSize={style.fontSize}
             height={toolbarHeight}
             width={width}
           />

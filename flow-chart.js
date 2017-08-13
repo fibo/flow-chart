@@ -330,7 +330,6 @@ var FlowChart = function (_React$Component) {
         },
         _react2.default.createElement(_Toolbar2.default, {
           dropToolbarIcon: this.dropToolbarIcon,
-          fontSize: style.fontSize,
           height: toolbarHeight,
           width: width
         }),
