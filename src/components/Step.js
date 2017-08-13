@@ -9,7 +9,7 @@ import {
 export default class Step extends React.Component {
   props: {
     height: number,
-    onMouseDown: (event: MouseEvent) => void,
+    onMouseDown?: (event: MouseEvent) => void,
     stopPropagation: (event: MouseEvent) => void,
     x: number,
     y: number,

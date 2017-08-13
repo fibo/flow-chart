@@ -15,6 +15,8 @@ import RectangularSelection from './components/RectangularSelection'
 import Step from './components/Step'
 import Toolbar from './components/Toolbar'
 
+import randomString from './utils/randomString'
+
 const frame = ({ height, width, style, items }) => ({
   rectangularSelection,
   selected,
@@ -64,18 +66,19 @@ export default class FlowChart extends React.Component {
         process: any,
         terminator: any
       },
-      height: any,
+      height: number,
       style: any,
       width: number
     },
-    dragging: ?Point,
+    dragging?: Point,
     isMouseDown: boolean,
     isMouseMoving: boolean,
     isMouseOver: boolean,
     offset: Point,
-    rectangularSelection: ?Rectangle,
+    rectangularSelection?: Rectangle,
     scroll: Point,
-    selected: any
+    selected: any,
+    toolbarHeight: number
   }
 
   constructor (props) {
@@ -90,21 +93,23 @@ export default class FlowChart extends React.Component {
       offset: { x: 0, y: 0 },
       rectangularSelection: null,
       scroll: { x: 0, y: 0 },
-      selected: {}
+      selected: {},
+      toolbarHeight: (2 * Step.defaultProps.style.fontSize)
     }
 
     bindme(this,
+      'dropToolbarIcon',
       'onMouseDown',
       'onMouseEnter',
       'onMouseLeave',
       'onMouseMove',
-      'onMouseUp'
+      'onMouseUp',
+      'selectStep',
+      'stopDragging'
     )
   }
 
   componentDidMount () {
-    const setState = this.setState.bind(this)
-
     const container = ReactDOM.findDOMNode(this).parentNode
 
     const offset = {
@@ -117,10 +122,56 @@ export default class FlowChart extends React.Component {
       y: window.scrollY
     }
 
-    setState({
+    this.setState({
       offset,
       scroll
     })
+  }
+
+  dropToolbarIcon (Item: Step) {
+    return (event) => {
+      const {
+        toolbarHeight
+      } = this.state
+
+      const coordinates = this.getCoordinates(event)
+
+      // Create item if dropped inside flowchart.
+      if (this.isInsideFlowChart(coordinates)) {
+        const id = this.generateId()
+
+        const diagram = Object.assign({}, this.state.diagram)
+        const itemType = Item.name.toLowerCase()
+
+        if (!diagram.items[itemType]) diagram.items[itemType] = {}
+
+        const x = coordinates.x - (Step.defaultProps.width / 2)
+        const y = coordinates.y - toolbarHeight - (Step.defaultProps.height / 2)
+
+        diagram.items[itemType][id] = {x, y}
+
+        this.setState({ diagram })
+      }
+    }
+  }
+
+  generateId () {
+    const id = randomString(4)
+
+    const items = Object.assign(
+      { decision: {} },
+      { process: {} },
+      { terminator: {} },
+      this.state.diagram.items
+    )
+
+    const idExists = (
+      items.decision[id] ||
+      items.process[id] ||
+      items.terminator[id]
+    )
+
+    return idExists ? this.generateId() : id
   }
 
   getCoordinates (event) {
@@ -135,6 +186,30 @@ export default class FlowChart extends React.Component {
     }
   }
 
+  isInsideFlowChart (coordinates: Point) {
+    const {
+      diagram,
+      offset,
+      scroll,
+      toolbarHeight
+    } = this.state
+
+    const { height, width } = diagram
+
+    console.log(coordinates, offset, scroll, height, width, toolbarHeight)
+    console.log(coordinates.x > offset.x + scroll.x)
+    console.log(coordinates.x < offset.x + scroll.x + width)
+    console.log(coordinates.y > offset.y + scroll.y + toolbarHeight)
+    console.log(coordinates.y < offset.y + scroll.y + height)
+
+    return (
+      (coordinates.x > offset.x + scroll.x) &&
+      (coordinates.x < offset.x + scroll.x + width) &&
+      (coordinates.y > offset.y + scroll.y + toolbarHeight) &&
+      (coordinates.y < offset.y + scroll.y + height)
+    )
+  }
+
   onMouseDown (event) {
     const {
       toolbarHeight
@@ -142,14 +217,16 @@ export default class FlowChart extends React.Component {
 
     const coordinates = this.getCoordinates(event)
 
+    const rectangularSelection = this.isInsideFlowChart(coordinates) ? ({
+      x: coordinates.x,
+      y: coordinates.y - toolbarHeight,
+      height: 0,
+      width: 0
+    }) : null
+
     this.setState({
       isMouseDown: true,
-      rectangularSelection: {
-        x: coordinates.x,
-        y: coordinates.y - toolbarHeight,
-        height: 0,
-        width: 0
-      },
+      rectangularSelection,
       selected: {}
     })
   }
@@ -278,7 +355,8 @@ export default class FlowChart extends React.Component {
       isMouseDown,
       isMouseOver,
       rectangularSelection,
-      selected
+      selected,
+      toolbarHeight
     } = this.state
 
     const {
@@ -288,111 +366,16 @@ export default class FlowChart extends React.Component {
       width
     } = diagram
 
-    const setState = this.setState.bind(this)
-
     // Defaults.
 
     if (!items.decision) items.decision = {}
     if (!items.process) items.process = {}
     if (!items.terminator) items.terminator = {}
 
-    const toolbarHeight = 2 * Step.defaultProps.style.fontSize
-
     const containerStyle = {
       boxShadow: isMouseOver ? '3px 4px 16px 0px rgba(0, 0, 0, 0.5)' : null,
       height: (toolbarHeight + height),
       width
-    }
-
-    // Utils
-
-    const randomString = (length) => {
-      let result = ''
-
-      while (result.length < length) {
-        result += String.fromCharCode(97 + Math.floor(Math.random() * 26))
-      }
-
-      return result
-    }
-
-    const generateId = () => {
-      const id = randomString(4)
-
-      const items = Object.assign(
-        { decision: {} },
-        { process: {} },
-        { terminator: {} },
-        this.state.diagram.items
-      )
-
-      const idExists = (
-        items.decision[id] ||
-        items.process[id] ||
-        items.terminator[id]
-      )
-
-      return idExists ? generateId() : id
-    }
-
-    const isInsideFlowChart = (coordinates) => {
-      const {
-        offset,
-        scroll
-      } = this.state
-
-      return (
-        (coordinates.x > offset.x + scroll.x) &&
-        (coordinates.x < offset.x + scroll.x + width) &&
-        (coordinates.y > offset.y + scroll.y + toolbarHeight) &&
-        (coordinates.y < offset.y + scroll.y + height)
-      )
-    }
-
-    const dropToolbarIcon = (Item) => (event) => {
-      const coordinates = getCoordinates(event)
-
-      // Create item if dropped inside flowchart.
-      if (isInsideFlowChart(coordinates)) {
-        const id = generateId()
-
-        const diagram = Object.assign({}, this.state.diagram)
-        const itemType = Item.name.toLowerCase()
-
-        if (!diagram.items[itemType]) diagram.items[itemType] = {}
-
-        const x = coordinates.x - (Step.defaultProps.width / 2)
-        const y = coordinates.y - toolbarHeight - (Step.defaultProps.height / 2)
-
-        diagram.items[itemType][id] = {x, y}
-
-        setState({ diagram })
-      }
-    }
-
-    const selectStep = (key) => (event) => {
-      event.stopPropagation()
-
-      if (selected[key]) return
-
-      const item = {}
-      item[key] = true
-
-      setState({
-        isMouseDown: true,
-        selected: item
-      })
-    }
-
-    const stopDragging = (event) => {
-      event.stopPropagation()
-
-      setState({
-        dragging: null,
-        isMouseDown: false,
-        rectangularSelection: null,
-        selected: {}
-      })
     }
 
     // Create an higher order component to be used as frame,
@@ -412,7 +395,7 @@ export default class FlowChart extends React.Component {
           style={containerStyle}
         >
           <Toolbar
-            dropToolbarIcon={dropToolbarIcon}
+            dropToolbarIcon={this.dropToolbarIcon}
             fontSize={style.fontSize}
             height={toolbarHeight}
             width={width}
@@ -420,11 +403,42 @@ export default class FlowChart extends React.Component {
           <Frame
             rectangularSelection={rectangularSelection}
             selected={selected}
-            selectStep={selectStep}
-            stopDragging={stopDragging}
+            selectStep={this.selectStep}
+            stopDragging={this.stopDragging}
           />
         </div>
       ) : <Frame />
     )
+  }
+
+  selectStep (key) {
+    return (event) => {
+      const {
+        selected
+      } = this.state
+
+      event.stopPropagation()
+
+      if (selected[key]) return
+
+      const item = {}
+      item[key] = true
+
+      this.setState({
+        isMouseDown: true,
+        selected: item
+      })
+    }
+  }
+
+  stopDragging (event) {
+    event.stopPropagation()
+
+    this.setState({
+      dragging: null,
+      isMouseDown: false,
+      rectangularSelection: null,
+      selected: {}
+    })
   }
 }
