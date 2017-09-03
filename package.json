@@ -44,14 +44,14 @@
     "bindme": "^1.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
-    "eslint-plugin-flowtype": "^2.35.0",
-    "flow-bin": "^0.52.0",
+    "eslint-plugin-flowtype": "^2.35.1",
+    "flow-bin": "^0.54.0",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.2",
     "zeroconf-redux": "^2.0.0"

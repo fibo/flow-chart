@@ -26,12 +26,12 @@ export default class FlowChart extends React.Component {
       style: any,
       width: number
     },
-    dragging?: Point,
+    dragging: ?Point,
     isMouseDown: boolean,
     isMouseMoving: boolean,
     isMouseOver: boolean,
     offset: Point,
-    rectangularSelection?: Rectangle,
+    rectangularSelection: ?Rectangle,
     scroll: Point,
     selected: any,
     toolbarHeight: number
