@@ -1,12 +1,6 @@
-// @flow
 import React from 'react'
 import ReactDOM from 'react-dom'
 import bindme from 'bindme'
-
-import {
-  Point,
-  Rectangle
-} from './types'
 
 import Canvas from './components/Canvas'
 import Step from './components/Step'
@@ -15,30 +9,19 @@ import Toolbar from './components/Toolbar'
 import randomString from './utils/randomString'
 
 export default class FlowChart extends React.Component {
-  state: {
-    diagram: {
-      items: {
-        decision: any,
-        process: any,
-        terminator: any
-      },
-      height: number,
-      style: any,
-      width: number
-    },
-    dragging: ?Point,
-    isMouseDown: boolean,
-    isMouseMoving: boolean,
-    isMouseOver: boolean,
-    offset: Point,
-    rectangularSelection: ?Rectangle,
-    scroll: Point,
-    selected: any,
-    toolbarHeight: number
-  }
-
   constructor (props) {
     super(props)
+
+    bindme(this,
+      'dropToolbarIcon',
+      'onMouseDown',
+      'onMouseEnter',
+      'onMouseLeave',
+      'onMouseMove',
+      'onMouseUp',
+      'selectStep',
+      'stopDragging'
+    )
 
     this.state = {
       diagram: props.diagram,
@@ -52,17 +35,6 @@ export default class FlowChart extends React.Component {
       selected: {},
       toolbarHeight: (2 * Step.defaultProps.style.fontSize)
     }
-
-    bindme(this,
-      'dropToolbarIcon',
-      'onMouseDown',
-      'onMouseEnter',
-      'onMouseLeave',
-      'onMouseMove',
-      'onMouseUp',
-      'selectStep',
-      'stopDragging'
-    )
   }
 
   componentDidMount () {
@@ -84,7 +56,7 @@ export default class FlowChart extends React.Component {
     })
   }
 
-  dropToolbarIcon (Item: Step) {
+  dropToolbarIcon (Item) {
     return (event) => {
       const {
         toolbarHeight
@@ -142,7 +114,7 @@ export default class FlowChart extends React.Component {
     }
   }
 
-  isInsideFlowChart (coordinates: Point) {
+  isInsideFlowChart (coordinates) {
     const {
       diagram,
       offset,

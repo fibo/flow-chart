@@ -1,9 +1,8 @@
-// @flow
 import React from 'react'
 
 import Step from './Step'
 
-export default class Process extends Step {
+export default class Process extends React.Component {
   render () {
     const {
       height,
@@ -35,3 +34,5 @@ export default class Process extends Step {
     )
   }
 }
+
+Process.defaultProps = Step.defaultProps

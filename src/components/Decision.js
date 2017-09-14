@@ -3,7 +3,7 @@ import React from 'react'
 
 import Step from './Step'
 
-export default class Decision extends Step {
+export default class Decision extends React.Component {
   render () {
     const {
       height,
@@ -37,3 +37,5 @@ export default class Decision extends Step {
     )
   }
 }
+
+Decision.defaultProps = Step.defaultProps

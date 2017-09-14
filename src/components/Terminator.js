@@ -1,9 +1,8 @@
-// @flow
 import React from 'react'
 
 import Step from './Step'
 
-export default class Terminator extends Step {
+export default class Terminator extends React.Component {
   render () {
     const {
       height,
@@ -55,3 +54,5 @@ export default class Terminator extends Step {
     )
   }
 }
+
+Terminator.defaultProps = Step.defaultProps

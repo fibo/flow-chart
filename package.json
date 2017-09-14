@@ -9,8 +9,7 @@
     "browserify": "for x in demo dist; do npm run browserify_$x; done",
     "browserify_demo": "NODE_PATH=. browserify demo.js -t babelify -o docs/demo/bundle.js",
     "browserify_dist": "BABEL_ENV=umd NODE_ENV=production browserify -r ./${npm_package_name}.js:${npm_package_name} -t babelify -o dist/${npm_package_name}.js",
-    "flow": "flow",
-    "homepage": "echo \"---\ntitle: $npm_package_name\nflow: /empty.json\n---\" > docs/index.md; cat README.md >> docs/index.md",
+    "homepage": "echo \"---\ntitle: $npm_package_name\n---\" > docs/index.md; cat README.md >> docs/index.md",
     "lint": "cd src; standard --fix; cd --",
     "postversion": "git push origin v${npm_package_version}; npm publish; git push origin master",
     "prebrowserify_demo": "npm run babel",
@@ -45,25 +44,10 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^7.2.3",
-    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-preset-env": "^1.6.0",
-    "babel-preset-flow": "^6.23.0",
-    "eslint-plugin-flowtype": "^2.35.1",
-    "flow-bin": "^0.54.0",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.2",
     "zeroconf-redux": "^2.0.0"
-  },
-  "standard": {
-    "globals": [
-      "Event",
-      "MouseEvent"
-    ],
-    "parser": "babel-eslint",
-    "plugins": [
-      "flowtype"
-    ]
   }
 }

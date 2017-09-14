@@ -1,15 +1,9 @@
-// @flow
 import React from 'react'
 
 import components from '../components'
 import DraggableToolbarIcon from './DraggableToolbarIcon'
-import { Area, FdropToolbarIcon } from '../types'
 
 export default class Toolbar extends React.Component {
-  props: Area & {
-    dropToolbarIcon: FdropToolbarIcon
-  }
-
   render () {
     const {
       dropToolbarIcon,
