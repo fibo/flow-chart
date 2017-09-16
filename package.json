@@ -40,7 +40,8 @@
     "react-dom": "16.x"
   },
   "dependencies": {
-    "bindme": "^1.0.0"
+    "bindme": "^1.0.0",
+    "not-defined": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

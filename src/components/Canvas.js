@@ -25,9 +25,6 @@ export default class Canvas extends React.Component {
         width={width}
         style={style}
       >
-        {rectangularSelection
-          ? <RectangularSelection {...rectangularSelection} />
-            : null}
         {Object.keys(items.decision).map(key => (
           <Decision key={key}
             selected={selected[key]}
@@ -52,6 +49,9 @@ export default class Canvas extends React.Component {
             {...items.terminator[key]}
           />
         ))}
+        {rectangularSelection
+          ? <RectangularSelection {...rectangularSelection} />
+            : null}
       </svg>
     )
   }

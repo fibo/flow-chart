@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+
 import bindme from 'bindme'
+import no from 'not-defined'
 
 import Canvas from './components/Canvas'
 import Step from './components/Step'
@@ -14,11 +16,15 @@ export default class FlowChart extends React.Component {
 
     bindme(this,
       'dropToolbarIcon',
+      'onDocumentKeydown',
+      'onDocumentKeyup',
       'onMouseDown',
       'onMouseEnter',
       'onMouseLeave',
       'onMouseMove',
       'onMouseUp',
+      'onWindowResize',
+      'onWindowScroll',
       'selectStep',
       'stopDragging'
     )
@@ -33,12 +39,19 @@ export default class FlowChart extends React.Component {
       rectangularSelection: null,
       scroll: { x: 0, y: 0 },
       selected: {},
+      shiftPressed: false,
       toolbarHeight: (2 * Step.defaultProps.style.fontSize)
     }
   }
 
   componentDidMount () {
     const container = ReactDOM.findDOMNode(this).parentNode
+
+    document.addEventListener('keydown', this.onDocumentKeydown)
+    document.addEventListener('keyup', this.onDocumentKeyup)
+
+    window.addEventListener('scroll', this.onWindowScroll)
+    window.addEventListener('resize', this.onWindowResize(container))
 
     const offset = {
       x: container.offsetLeft,
@@ -153,6 +166,46 @@ export default class FlowChart extends React.Component {
     })
   }
 
+  onDocumentKeydown () {
+    const { code } = event
+
+    const {
+      selected,
+      shiftPressed
+    } = this.state
+
+    const unit = shiftPressed ? 1 : 10
+
+    switch (code) {
+      case 'Escape':
+        this.setState({ selected: {} })
+        break
+
+      case 'ShiftLeft':
+      case 'ShiftRight':
+        this.setState({ shiftPressed: true })
+
+        break
+
+      default:
+        break
+    }
+  }
+
+  onDocumentKeyup () {
+    const { code } = event
+
+    switch (code) {
+      case 'ShiftLeft':
+      case 'ShiftRight':
+        this.setState({ shiftPressed: false })
+        break
+
+      default:
+        break
+    }
+  }
+
   onMouseEnter () {
     this.setState({
       isMouseOver: true,
@@ -177,31 +230,9 @@ export default class FlowChart extends React.Component {
       toolbarHeight
     } = this.state
 
+    if (!isMouseDown) return
+
     const coordinates = this.getCoordinates(event)
-    const draggedItems = Object.assign({}, diagram.items)
-
-    if (Object.keys(selected).length > 0) {
-      if (isMouseDown && dragging) {
-        const deltaX = coordinates.x - dragging.x
-        const deltaY = coordinates.y - dragging.y
-
-        Object.keys(selected).forEach((key) => {
-          Object.keys(draggedItems).forEach((itemType) => {
-            if (draggedItems[itemType][key]) {
-              draggedItems[itemType][key].x += deltaX
-              draggedItems[itemType][key].y += deltaY
-            }
-          })
-        })
-
-        this.setState({
-          dragging: coordinates,
-          items: draggedItems
-        })
-      } else {
-        this.setState({ dragging: coordinates })
-      }
-    }
 
     if (rectangularSelection) {
       this.setState({
@@ -212,6 +243,29 @@ export default class FlowChart extends React.Component {
           width: (coordinates.x - rectangularSelection.x)
         }
       })
+    } else {
+      if (no(selected)) {
+        return
+      } else {
+        const items = Object.assign({}, diagram.items)
+
+        const deltaX = (dragging ? coordinates.x - dragging.x : 0)
+        const deltaY = (dragging ? coordinates.y - dragging.y : 0)
+
+        Object.keys(selected).forEach((key) => {
+          Object.keys(items).forEach((type) => {
+            if (items[type][key]) {
+              items[type][key].x += deltaX
+              items[type][key].y += deltaY
+            }
+          })
+        })
+
+        this.setState({
+          diagram: Object.assign({}, diagram, { items }),
+          dragging: coordinates
+        })
+      }
     }
   }
 
@@ -225,7 +279,7 @@ export default class FlowChart extends React.Component {
       items
     } = diagram
 
-    let selected = {}
+    let selected = Object.assign({}, this.state.selected)
 
     if (rectangularSelection) {
       Object.keys(items).forEach((itemType) => {
@@ -258,10 +312,33 @@ export default class FlowChart extends React.Component {
     }
 
     this.setState({
+      dragging: null,
       isMouseDown: false,
       rectangularSelection: null,
       selected
     })
+  }
+
+  onWindowResize (container): void {
+    return () => {
+      const rect = container.getBoundingClientRect()
+
+      const dynamicView = {
+        height: rect.height,
+        width: rect.width
+      }
+
+      this.setState({ dynamicView })
+    }
+  }
+
+  onWindowScroll (): void {
+    const scroll = {
+      x: window.scrollX,
+      y: window.scrollY
+    }
+
+    this.setState({ scroll })
   }
 
   render () {
@@ -330,14 +407,15 @@ export default class FlowChart extends React.Component {
   selectStep (key) {
     return (event) => {
       const {
-        selected
+        selected,
+        shiftPressed
       } = this.state
 
       event.stopPropagation()
 
       if (selected[key]) return
 
-      const item = {}
+      const item = shiftPressed ? Object.assign({}, selected) : {}
       item[key] = true
 
       this.setState({
