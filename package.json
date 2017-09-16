@@ -1,6 +1,6 @@
 {
   "name": "flow-chart",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "is a collection of React components to draw an algorithm, workflow or process diagram",
   "main": "flow-chart.js",
   "scripts": {
