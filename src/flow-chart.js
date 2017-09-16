@@ -145,27 +145,6 @@ export default class FlowChart extends React.Component {
     )
   }
 
-  onMouseDown (event) {
-    const {
-      toolbarHeight
-    } = this.state
-
-    const coordinates = this.getCoordinates(event)
-
-    const rectangularSelection = this.isInsideFlowChart(coordinates) ? ({
-      x: coordinates.x,
-      y: coordinates.y - toolbarHeight,
-      height: 0,
-      width: 0
-    }) : null
-
-    this.setState({
-      isMouseDown: true,
-      rectangularSelection,
-      selected: {}
-    })
-  }
-
   onDocumentKeydown () {
     const { code } = event
 
@@ -204,6 +183,27 @@ export default class FlowChart extends React.Component {
       default:
         break
     }
+  }
+
+  onMouseDown (event) {
+    const {
+      toolbarHeight
+    } = this.state
+
+    const coordinates = this.getCoordinates(event)
+
+    const rectangularSelection = this.isInsideFlowChart(coordinates) ? ({
+      x: coordinates.x,
+      y: coordinates.y - toolbarHeight,
+      height: 0,
+      width: 0
+    }) : null
+
+    this.setState({
+      isMouseDown: true,
+      rectangularSelection,
+      selected: {}
+    })
   }
 
   onMouseEnter () {
@@ -319,7 +319,7 @@ export default class FlowChart extends React.Component {
     })
   }
 
-  onWindowResize (container): void {
+  onWindowResize (container) {
     return () => {
       const rect = container.getBoundingClientRect()
 
@@ -332,7 +332,7 @@ export default class FlowChart extends React.Component {
     }
   }
 
-  onWindowScroll (): void {
+  onWindowScroll () {
     const scroll = {
       x: window.scrollX,
       y: window.scrollY
@@ -342,8 +342,6 @@ export default class FlowChart extends React.Component {
   }
 
   render () {
-    // State and props.
-
     const {
       editable
     } = this.props
@@ -365,9 +363,9 @@ export default class FlowChart extends React.Component {
 
     // Defaults.
 
-    if (!items.decision) items.decision = {}
-    if (!items.process) items.process = {}
-    if (!items.terminator) items.terminator = {}
+    if (no(items.decision)) items.decision = {}
+    if (no(items.process)) items.process = {}
+    if (no(items.terminator)) items.terminator = {}
 
     const containerStyle = {
       boxShadow: isMouseOver ? '3px 4px 16px 0px rgba(0, 0, 0, 0.5)' : null,
@@ -406,14 +404,12 @@ export default class FlowChart extends React.Component {
 
   selectStep (key) {
     return (event) => {
+      event.stopPropagation()
+
       const {
         selected,
         shiftPressed
       } = this.state
-
-      event.stopPropagation()
-
-      if (selected[key]) return
 
       const item = shiftPressed ? Object.assign({}, selected) : {}
       item[key] = true
