@@ -49,6 +49,7 @@ var Canvas = function (_React$Component) {
     key: 'render',
     value: function render() {
       var _props = this.props,
+          createArrow = _props.createArrow,
           height = _props.height,
           items = _props.items,
           rectangularSelection = _props.rectangularSelection,
@@ -59,6 +60,8 @@ var Canvas = function (_React$Component) {
           width = _props.width;
 
 
+      var multipleSelection = Object.keys(selected).length > 1;
+
       return _react2.default.createElement(
         'svg',
         {
@@ -66,9 +69,10 @@ var Canvas = function (_React$Component) {
           width: width,
           style: style
         },
-        rectangularSelection ? _react2.default.createElement(_RectangularSelection2.default, rectangularSelection) : null,
         Object.keys(items.decision).map(function (key) {
           return _react2.default.createElement(_Decision2.default, _extends({ key: key,
+            createArrow: createArrow,
+            multipleSelection: multipleSelection,
             selected: selected[key],
             selectStep: selectStep(key),
             stopDragging: stopDragging
@@ -76,6 +80,8 @@ var Canvas = function (_React$Component) {
         }),
         Object.keys(items.process).map(function (key) {
           return _react2.default.createElement(_Process2.default, _extends({ key: key,
+            createArrow: createArrow,
+            multipleSelection: multipleSelection,
             selected: selected[key],
             selectStep: selectStep(key),
             stopDragging: stopDragging
@@ -83,11 +89,14 @@ var Canvas = function (_React$Component) {
         }),
         Object.keys(items.terminator).map(function (key) {
           return _react2.default.createElement(_Terminator2.default, _extends({ key: key,
+            createArrow: createArrow,
+            multipleSelection: multipleSelection,
             selected: selected[key],
             selectStep: selectStep(key),
             stopDragging: stopDragging
           }, items.terminator[key]));
-        })
+        }),
+        rectangularSelection ? _react2.default.createElement(_RectangularSelection2.default, rectangularSelection) : null
       );
     }
   }]);

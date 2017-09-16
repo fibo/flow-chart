@@ -10,6 +10,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _ConnectionPoint = require('./ConnectionPoint');
+
+var _ConnectionPoint2 = _interopRequireDefault(_ConnectionPoint);
+
 var _Step2 = require('./Step');
 
 var _Step3 = _interopRequireDefault(_Step2);
@@ -35,19 +39,23 @@ var Decision = function (_Step) {
     key: 'render',
     value: function render() {
       var _props = this.props,
+          createArrow = _props.createArrow,
           height = _props.height,
           width = _props.width,
           x = _props.x,
           y = _props.y,
+          multipleSelection = _props.multipleSelection,
           selected = _props.selected,
-          selectedColor = _props.selectedColor,
           selectStep = _props.selectStep,
-          stopDragging = _props.stopDragging,
-          style = _props.style;
+          stopDragging = _props.stopDragging;
 
 
-      var halfH = height / 2;
-      var halfW = width / 2;
+      var showConnectionPoints = selected && !multipleSelection;
+
+      var style = this.getStyle();
+
+      var halfHeight = height / 2;
+      var halfWidth = width / 2;
 
       return _react2.default.createElement(
         'g',
@@ -57,9 +65,25 @@ var Decision = function (_Step) {
           transform: 'translate(' + x + ',' + y + ')'
         },
         _react2.default.createElement('path', {
-          d: 'M0 ' + halfH + ' L' + halfW + ' 0 L' + width + ' ' + halfH + ' L' + halfW + ' ' + height + 'Z',
-          style: Object.assign({}, style, selected ? { stroke: selectedColor } : {})
-        })
+          d: 'M0 ' + halfHeight + ' L' + halfWidth + ' 0 L' + width + ' ' + halfHeight + ' L' + halfWidth + ' ' + height + 'Z',
+          style: style
+        }),
+        showConnectionPoints ? _react2.default.createElement(_ConnectionPoint2.default, {
+          createArrow: createArrow,
+          cx: 0, cy: halfHeight
+        }) : null,
+        showConnectionPoints ? _react2.default.createElement(_ConnectionPoint2.default, {
+          createArrow: createArrow,
+          cx: halfWidth, cy: 0
+        }) : null,
+        showConnectionPoints ? _react2.default.createElement(_ConnectionPoint2.default, {
+          createArrow: createArrow,
+          cx: width, cy: halfHeight
+        }) : null,
+        showConnectionPoints ? _react2.default.createElement(_ConnectionPoint2.default, {
+          createArrow: createArrow,
+          cx: halfWidth, cy: height
+        }) : null
       );
     }
   }]);
@@ -68,3 +92,6 @@ var Decision = function (_Step) {
 }(_Step3.default);
 
 exports.default = Decision;
+
+
+Decision.defaultProps = _Step3.default.defaultProps;

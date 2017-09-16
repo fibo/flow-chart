@@ -1,12 +1,11 @@
 ---
 title: flow-chart
-flow: /empty.json
 ---
 # flow-chart
 
 > is a collection of [React] components to draw an algorithm, workflow or process diagram
 
-**DO NOT DOWNLOAD ME** I am a parked package.
+**This package is at an early stage of development, contributions are welcome**.
 
 ## Installation
 

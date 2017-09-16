@@ -15,6 +15,7 @@ export default class FlowChart extends React.Component {
     super(props)
 
     bindme(this,
+      'createArrow',
       'dropToolbarIcon',
       'onDocumentKeydown',
       'onDocumentKeyup',
@@ -67,6 +68,10 @@ export default class FlowChart extends React.Component {
       offset,
       scroll
     })
+  }
+
+  createArrow (event) {
+    event.stopPropagation()
   }
 
   dropToolbarIcon (Item) {
@@ -145,15 +150,8 @@ export default class FlowChart extends React.Component {
     )
   }
 
-  onDocumentKeydown () {
+  onDocumentKeydown (event) {
     const { code } = event
-
-    const {
-      selected,
-      shiftPressed
-    } = this.state
-
-    const unit = shiftPressed ? 1 : 10
 
     switch (code) {
       case 'Escape':
@@ -171,7 +169,7 @@ export default class FlowChart extends React.Component {
     }
   }
 
-  onDocumentKeyup () {
+  onDocumentKeyup (event) {
     const { code } = event
 
     switch (code) {
@@ -245,7 +243,7 @@ export default class FlowChart extends React.Component {
       })
     } else {
       if (no(selected)) {
-        return
+
       } else {
         const items = Object.assign({}, diagram.items)
 
@@ -392,6 +390,7 @@ export default class FlowChart extends React.Component {
           />
           <Canvas
             {...commonCanvasProps}
+            createArrow={this.createArrow}
             rectangularSelection={rectangularSelection}
             selected={selected}
             selectStep={this.selectStep}

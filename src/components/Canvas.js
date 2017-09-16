@@ -9,6 +9,7 @@ import RectangularSelection from './RectangularSelection'
 export default class Canvas extends React.Component {
   render () {
     const {
+      createArrow,
       height,
       items,
       rectangularSelection,
@@ -19,6 +20,8 @@ export default class Canvas extends React.Component {
       width
     } = this.props
 
+    const multipleSelection = Object.keys(selected).length > 1
+
     return (
       <svg
         height={height}
@@ -27,6 +30,8 @@ export default class Canvas extends React.Component {
       >
         {Object.keys(items.decision).map(key => (
           <Decision key={key}
+            createArrow={createArrow}
+            multipleSelection={multipleSelection}
             selected={selected[key]}
             selectStep={selectStep(key)}
             stopDragging={stopDragging}
@@ -35,6 +40,8 @@ export default class Canvas extends React.Component {
         ))}
         {Object.keys(items.process).map(key => (
           <Process key={key}
+            createArrow={createArrow}
+            multipleSelection={multipleSelection}
             selected={selected[key]}
             selectStep={selectStep(key)}
             stopDragging={stopDragging}
@@ -43,6 +50,8 @@ export default class Canvas extends React.Component {
         ))}
         {Object.keys(items.terminator).map(key => (
           <Terminator key={key}
+            createArrow={createArrow}
+            multipleSelection={multipleSelection}
             selected={selected[key]}
             selectStep={selectStep(key)}
             stopDragging={stopDragging}

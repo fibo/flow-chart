@@ -10,9 +10,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Step = require('./Step');
+var _bindme = require('bindme');
 
-var _Step2 = _interopRequireDefault(_Step);
+var _bindme2 = _interopRequireDefault(_bindme);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22,55 +22,63 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DraggableToolbarIcon = function (_React$Component) {
-  _inherits(DraggableToolbarIcon, _React$Component);
+var ConnectionPoint = function (_React$Component) {
+  _inherits(ConnectionPoint, _React$Component);
 
-  function DraggableToolbarIcon() {
-    _classCallCheck(this, DraggableToolbarIcon);
+  function ConnectionPoint(props) {
+    var _this;
 
-    return _possibleConstructorReturn(this, (DraggableToolbarIcon.__proto__ || Object.getPrototypeOf(DraggableToolbarIcon)).apply(this, arguments));
+    _classCallCheck(this, ConnectionPoint);
+
+    (0, _bindme2.default)((_this = _possibleConstructorReturn(this, (ConnectionPoint.__proto__ || Object.getPrototypeOf(ConnectionPoint)).call(this, props)), _this), 'onMouseLeave', 'onMouseOver');
+
+    _this.state = {
+      focused: false
+    };
+    return _this;
   }
 
-  _createClass(DraggableToolbarIcon, [{
+  _createClass(ConnectionPoint, [{
+    key: 'onMouseLeave',
+    value: function onMouseLeave() {
+      this.setState({ focused: false });
+    }
+  }, {
+    key: 'onMouseOver',
+    value: function onMouseOver() {
+      this.setState({ focused: true });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
-          dropToolbarIcon = _props.dropToolbarIcon,
-          height = _props.height,
-          Item = _props.Item,
-          width = _props.width;
+          createArrow = _props.createArrow,
+          cx = _props.cx,
+          cy = _props.cy,
+          r = _props.r;
+      var focused = this.state.focused;
 
 
-      var margin = Item.defaultProps.style.strokeWidth;
-
-      return _react2.default.createElement(
-        'div',
-        {
-          draggable: true,
-          onDragEnd: dropToolbarIcon(Item),
-          style: { height: height, width: width }
-        },
-        _react2.default.createElement(
-          'svg',
-          {
-            height: height,
-            width: width
-          },
-          _react2.default.createElement(Item, {
-            x: margin,
-            y: margin,
-            height: height - 2 * margin,
-            width: width - 2 * margin
-          })
-        )
-      );
+      return _react2.default.createElement('circle', {
+        onMouseDown: createArrow,
+        onMouseLeave: this.onMouseLeave,
+        onMouseOver: this.onMouseOver,
+        fill: focused ? 'tomato' : 'white',
+        stroke: 'tomato',
+        strokeWidth: 1,
+        cx: cx,
+        cy: cy,
+        r: r
+      });
     }
   }]);
 
-  return DraggableToolbarIcon;
+  return ConnectionPoint;
 }(_react2.default.Component);
 
-exports.default = DraggableToolbarIcon;
+exports.default = ConnectionPoint;
 
 
-DraggableToolbarIcon.defaultProps = _Step2.default.defaultProps;
+ConnectionPoint.defaultProps = {
+  r: 5
+};

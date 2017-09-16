@@ -2,6 +2,8 @@
 
 > is a collection of [React] components to draw an algorithm, workflow or process diagram
 
+**This package is at an early stage of development, contributions are welcome**.
+
 ## Installation
 
 [React] is required as a peer dependency.

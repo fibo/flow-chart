@@ -10,6 +10,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _ConnectionPoint = require('./ConnectionPoint');
+
+var _ConnectionPoint2 = _interopRequireDefault(_ConnectionPoint);
+
 var _Step2 = require('./Step');
 
 var _Step3 = _interopRequireDefault(_Step2);
@@ -35,20 +39,25 @@ var Terminator = function (_Step) {
     key: 'render',
     value: function render() {
       var _props = this.props,
+          createArrow = _props.createArrow,
           height = _props.height,
           width = _props.width,
           x = _props.x,
           y = _props.y,
+          multipleSelection = _props.multipleSelection,
           selected = _props.selected,
-          selectedColor = _props.selectedColor,
           selectStep = _props.selectStep,
-          stopDragging = _props.stopDragging,
-          style = _props.style;
+          stopDragging = _props.stopDragging;
 
 
-      var rectStyle = Object.assign({}, style, { strokeDasharray: width - height + ' ' + height }, selected ? { stroke: selectedColor } : {});
+      var showConnectionPoints = selected && !multipleSelection;
 
-      var halfH = height / 2;
+      var style = this.getStyle();
+
+      var rectStyle = Object.assign({}, style, { strokeDasharray: width - height + ' ' + height });
+
+      var halfHeight = height / 2;
+      var halfWidth = width / 2;
 
       return _react2.default.createElement(
         'g',
@@ -58,19 +67,35 @@ var Terminator = function (_Step) {
           transform: 'translate(' + x + ',' + y + ')'
         },
         _react2.default.createElement('rect', {
-          x: halfH,
+          x: halfHeight,
           height: height,
           style: rectStyle,
           width: width - height
         }),
         _react2.default.createElement('path', {
-          d: 'M' + halfH + ',0 A' + halfH + ',' + halfH + ' 0 0,0 ' + halfH + ',' + height,
-          style: Object.assign({}, style, selected ? { stroke: selectedColor } : {})
+          d: 'M' + halfHeight + ',0 A' + halfHeight + ',' + halfHeight + ' 0 0,0 ' + halfHeight + ',' + height,
+          style: style
         }),
         _react2.default.createElement('path', {
-          d: 'M' + (width - halfH) + ',0 A' + halfH + ',' + halfH + ' 0 0,1 ' + (width - halfH) + ',' + height,
-          style: Object.assign({}, style, selected ? { stroke: selectedColor } : {})
-        })
+          d: 'M' + (width - halfHeight) + ',0 A' + halfHeight + ',' + halfHeight + ' 0 0,1 ' + (width - halfHeight) + ',' + height,
+          style: style
+        }),
+        showConnectionPoints ? _react2.default.createElement(_ConnectionPoint2.default, {
+          createArrow: createArrow,
+          cx: 0, cy: halfHeight
+        }) : null,
+        showConnectionPoints ? _react2.default.createElement(_ConnectionPoint2.default, {
+          createArrow: createArrow,
+          cx: halfWidth, cy: 0
+        }) : null,
+        showConnectionPoints ? _react2.default.createElement(_ConnectionPoint2.default, {
+          createArrow: createArrow,
+          cx: width, cy: halfHeight
+        }) : null,
+        showConnectionPoints ? _react2.default.createElement(_ConnectionPoint2.default, {
+          createArrow: createArrow,
+          cx: halfWidth, cy: height
+        }) : null
       );
     }
   }]);
@@ -79,3 +104,6 @@ var Terminator = function (_Step) {
 }(_Step3.default);
 
 exports.default = Terminator;
+
+
+Terminator.defaultProps = _Step3.default.defaultProps;

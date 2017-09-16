@@ -1,20 +1,28 @@
 import React from 'react'
 
+import ConnectionPoint from './ConnectionPoint'
 import Step from './Step'
 
-export default class Process extends React.Component {
+export default class Process extends Step {
   render () {
     const {
+      createArrow,
       height,
       width,
       x,
       y,
+      multipleSelection,
       selected,
-      selectedColor,
       selectStep,
-      stopDragging,
-      style
+      stopDragging
     } = this.props
+
+    const showConnectionPoints = (selected && !multipleSelection)
+
+    const style = this.getStyle()
+
+    const halfHeight = height / 2
+    const halfWidth = width / 2
 
     return (
       <g
@@ -24,12 +32,33 @@ export default class Process extends React.Component {
       >
         <rect
           height={height}
-          style={Object.assign({},
-            style,
-            (selected ? { stroke: selectedColor } : {})
-          )}
+          style={style}
           width={width}
         />
+        {showConnectionPoints ? (
+          <ConnectionPoint
+            createArrow={createArrow}
+            cx={0} cy={halfHeight}
+          />
+        ) : null}
+        {showConnectionPoints ? (
+          <ConnectionPoint
+            createArrow={createArrow}
+            cx={halfWidth} cy={0}
+          />
+        ) : null}
+        {showConnectionPoints ? (
+          <ConnectionPoint
+            createArrow={createArrow}
+            cx={width} cy={halfHeight}
+          />
+        ) : null}
+        {showConnectionPoints ? (
+          <ConnectionPoint
+            createArrow={createArrow}
+            cx={halfWidth} cy={height}
+          />
+        ) : null}
       </g>
     )
   }
