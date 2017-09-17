@@ -1,10 +1,12 @@
 import React from 'react'
 
+import Arrow from './Arrow'
+import RectangularSelection from './RectangularSelection'
+import Step from './Step'
+
 import Decision from './Decision'
 import Process from './Process'
 import Terminator from './Terminator'
-
-import RectangularSelection from './RectangularSelection'
 
 const component = {
   decision: Decision,
@@ -33,6 +35,23 @@ export default class Canvas extends React.Component {
         width={width}
         style={style}
       >
+        <defs>
+          <marker
+            id='arrow'
+            markerWidth='10'
+            markerHeight='10'
+            refX='0'
+            refY='3'
+            orient='auto'
+            markerUnits='strokeWidth'
+          >
+            <path
+              d='M0,0 L0,6 L9,3 z'
+              fill={Step.defaultProps.style.stroke}
+            />
+          </marker>
+                    </defs>
+        <Arrow />
         {steps.map((step, i) => {
           const { id, type } = step
           const Step = component[type]
