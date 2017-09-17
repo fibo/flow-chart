@@ -42,7 +42,7 @@ export default class Arrow extends React.Component {
         onMouseDown={this.onMouseDown}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
-        stroke={Step.defaultProps.style.stroke}
+        stroke={stroke}
         strokeWidth={strokeWidth}
         markerEnd='url(#arrow)'
       />

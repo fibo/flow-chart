@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -28,6 +26,10 @@ var _Canvas = require('./components/Canvas');
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
 
+var _ErrorBoundary = require('./components/ErrorBoundary');
+
+var _ErrorBoundary2 = _interopRequireDefault(_ErrorBoundary);
+
 var _Step = require('./components/Step');
 
 var _Step2 = _interopRequireDefault(_Step);
@@ -41,6 +43,8 @@ var _randomString = require('./utils/randomString');
 var _randomString2 = _interopRequireDefault(_randomString);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -107,50 +111,51 @@ var FlowChart = function (_React$Component) {
     }
   }, {
     key: 'dropToolbarIcon',
-    value: function dropToolbarIcon(Item) {
+    value: function dropToolbarIcon(StepIcon) {
       var _this2 = this;
 
       return function (event) {
-        var toolbarHeight = _this2.state.toolbarHeight;
+        var _state = _this2.state,
+            diagram = _state.diagram,
+            toolbarHeight = _state.toolbarHeight;
 
 
         var coordinates = _this2.getCoordinates(event);
 
         // Create item if dropped inside flowchart.
         if (_this2.isInsideFlowChart(coordinates)) {
-          var id = _this2.generateId();
+          var id = _this2.generateId(4);
 
-          var diagram = Object.assign({}, _this2.state.diagram);
-          var itemType = Item.name.toLowerCase();
-
-          if (!diagram.items[itemType]) diagram.items[itemType] = {};
+          var type = StepIcon.name.toLowerCase();
 
           var x = coordinates.x - _Step2.default.defaultProps.width / 2;
           var y = coordinates.y - toolbarHeight - _Step2.default.defaultProps.height / 2;
 
-          diagram.items[itemType][id] = { x: x, y: y };
-
-          _this2.setState({ diagram: diagram });
+          _this2.setState({
+            diagram: Object.assign({}, diagram, { steps: [].concat(_toConsumableArray(diagram.steps), [{ id: id, type: type, x: x, y: y }]) })
+          });
         }
       };
     }
   }, {
     key: 'generateId',
-    value: function generateId() {
-      var id = (0, _randomString2.default)(4);
+    value: function generateId(l) {
+      var newId = (0, _randomString2.default)(l);
 
-      var items = Object.assign({ decision: {} }, { process: {} }, { terminator: {} }, this.state.diagram.items);
+      var idExists = this.state.diagram.steps.find(function (_ref) {
+        var id = _ref.id;
+        return id === newId;
+      });
 
-      var idExists = items.decision[id] || items.process[id] || items.terminator[id];
-
-      return idExists ? this.generateId() : id;
+      // If new random id was found, try again with a longer random string.
+      return idExists ? this.generateId(l + 1) : newId;
     }
   }, {
     key: 'getCoordinates',
     value: function getCoordinates(event) {
-      var _state = this.state,
-          offset = _state.offset,
-          scroll = _state.scroll;
+      var _state2 = this.state,
+          offset = _state2.offset,
+          scroll = _state2.scroll;
 
 
       return {
@@ -161,11 +166,11 @@ var FlowChart = function (_React$Component) {
   }, {
     key: 'isInsideFlowChart',
     value: function isInsideFlowChart(coordinates) {
-      var _state2 = this.state,
-          diagram = _state2.diagram,
-          offset = _state2.offset,
-          scroll = _state2.scroll,
-          toolbarHeight = _state2.toolbarHeight;
+      var _state3 = this.state,
+          diagram = _state3.diagram,
+          offset = _state3.offset,
+          scroll = _state3.scroll,
+          toolbarHeight = _state3.toolbarHeight;
       var height = diagram.height,
           width = diagram.width;
 
@@ -249,13 +254,13 @@ var FlowChart = function (_React$Component) {
   }, {
     key: 'onMouseMove',
     value: function onMouseMove(event) {
-      var _state3 = this.state,
-          diagram = _state3.diagram,
-          dragging = _state3.dragging,
-          isMouseDown = _state3.isMouseDown,
-          rectangularSelection = _state3.rectangularSelection,
-          selected = _state3.selected,
-          toolbarHeight = _state3.toolbarHeight;
+      var _state4 = this.state,
+          diagram = _state4.diagram,
+          dragging = _state4.dragging,
+          isMouseDown = _state4.isMouseDown,
+          rectangularSelection = _state4.rectangularSelection,
+          selected = _state4.selected,
+          toolbarHeight = _state4.toolbarHeight;
 
 
       if (!isMouseDown) return;
@@ -273,22 +278,21 @@ var FlowChart = function (_React$Component) {
         });
       } else {
         if ((0, _notDefined2.default)(selected)) {} else {
-          var items = Object.assign({}, diagram.items);
+          var steps = [].concat(_toConsumableArray(diagram.steps));
 
           var deltaX = dragging ? coordinates.x - dragging.x : 0;
           var deltaY = dragging ? coordinates.y - dragging.y : 0;
 
-          Object.keys(selected).forEach(function (key) {
-            Object.keys(items).forEach(function (type) {
-              if (items[type][key]) {
-                items[type][key].x += deltaX;
-                items[type][key].y += deltaY;
-              }
-            });
+          steps.filter(function (_ref2) {
+            var id = _ref2.id;
+            return selected[id];
+          }).forEach(function (step) {
+            step.x += deltaX;
+            step.y += deltaY;
           });
 
           this.setState({
-            diagram: Object.assign({}, diagram, { items: items }),
+            diagram: Object.assign({}, diagram, { steps: steps }),
             dragging: coordinates
           });
         }
@@ -297,37 +301,32 @@ var FlowChart = function (_React$Component) {
   }, {
     key: 'onMouseUp',
     value: function onMouseUp() {
-      var _state4 = this.state,
-          diagram = _state4.diagram,
-          rectangularSelection = _state4.rectangularSelection;
-      var items = diagram.items;
+      var _state5 = this.state,
+          diagram = _state5.diagram,
+          rectangularSelection = _state5.rectangularSelection;
 
 
       var selected = Object.assign({}, this.state.selected);
 
       if (rectangularSelection) {
-        Object.keys(items).forEach(function (itemType) {
-          Object.keys(items[itemType]).forEach(function (key) {
-            var _Object$assign = Object.assign({}, _Step2.default.defaultProps, items[itemType][key]),
-                x = _Object$assign.x,
-                y = _Object$assign.y,
-                height = _Object$assign.height,
-                width = _Object$assign.width;
+        diagram.steps.forEach(function (_ref3) {
+          var id = _ref3.id,
+              x = _ref3.x,
+              y = _ref3.y,
+              width = _ref3.width,
+              height = _ref3.height;
 
-            // Consider when rectangular selection is reflected.
+          // Consider when rectangular selection is reflected.
+          var boundsX = rectangularSelection.width >= 0 ? rectangularSelection.x : rectangularSelection.x + rectangularSelection.width;
+          var boundsY = rectangularSelection.height >= 0 ? rectangularSelection.y : rectangularSelection.y + rectangularSelection.height;
+          var boundsH = Math.abs(rectangularSelection.height);
+          var boundsW = Math.abs(rectangularSelection.width);
 
+          var isInside = x >= boundsX && y >= boundsY && height <= boundsH && width <= boundsW;
 
-            var boundsX = rectangularSelection.width >= 0 ? rectangularSelection.x : rectangularSelection.x + rectangularSelection.width;
-            var boundsY = rectangularSelection.height >= 0 ? rectangularSelection.y : rectangularSelection.y + rectangularSelection.height;
-            var boundsH = Math.abs(rectangularSelection.height);
-            var boundsW = Math.abs(rectangularSelection.width);
-
-            var isInside = x >= boundsX && y >= boundsY && height <= boundsH && width <= boundsW;
-
-            if (isInside) {
-              selected[key] = true;
-            }
-          });
+          if (isInside) {
+            selected[id] = true;
+          }
         });
       }
 
@@ -368,30 +367,21 @@ var FlowChart = function (_React$Component) {
     key: 'render',
     value: function render() {
       var editable = this.props.editable;
-      var _state5 = this.state,
-          diagram = _state5.diagram,
-          isMouseOver = _state5.isMouseOver,
-          rectangularSelection = _state5.rectangularSelection,
-          selected = _state5.selected,
-          toolbarHeight = _state5.toolbarHeight;
-      var items = diagram.items,
-          style = diagram.style,
-          height = diagram.height,
+      var _state6 = this.state,
+          diagram = _state6.diagram,
+          isMouseOver = _state6.isMouseOver,
+          rectangularSelection = _state6.rectangularSelection,
+          selected = _state6.selected,
+          toolbarHeight = _state6.toolbarHeight;
+      var height = diagram.height,
           width = diagram.width;
 
-      // Defaults.
-
-      if ((0, _notDefined2.default)(items.decision)) items.decision = {};
-      if ((0, _notDefined2.default)(items.process)) items.process = {};
-      if ((0, _notDefined2.default)(items.terminator)) items.terminator = {};
 
       var containerStyle = {
         boxShadow: isMouseOver ? '3px 4px 16px 0px rgba(0, 0, 0, 0.5)' : null,
         height: toolbarHeight + height,
         width: width
       };
-
-      var commonCanvasProps = { height: height, width: width, style: style, items: items };
 
       return editable ? _react2.default.createElement(
         'div',
@@ -408,34 +398,39 @@ var FlowChart = function (_React$Component) {
           height: toolbarHeight,
           width: width
         }),
-        _react2.default.createElement(_Canvas2.default, _extends({}, commonCanvasProps, {
-          createArrow: this.createArrow,
-          rectangularSelection: rectangularSelection,
-          selected: selected,
-          selectStep: this.selectStep,
-          stopDragging: this.stopDragging
-        }))
-      ) : _react2.default.createElement(_Canvas2.default, commonCanvasProps);
+        _react2.default.createElement(
+          _ErrorBoundary2.default,
+          null,
+          _react2.default.createElement(_Canvas2.default, {
+            diagram: diagram,
+            createArrow: this.createArrow,
+            rectangularSelection: rectangularSelection,
+            selected: selected,
+            selectStep: this.selectStep,
+            stopDragging: this.stopDragging
+          })
+        )
+      ) : _react2.default.createElement(_Canvas2.default, { diagram: diagram });
     }
   }, {
     key: 'selectStep',
-    value: function selectStep(key) {
+    value: function selectStep(id) {
       var _this4 = this;
 
       return function (event) {
         event.stopPropagation();
 
-        var _state6 = _this4.state,
-            selected = _state6.selected,
-            shiftPressed = _state6.shiftPressed;
+        var _state7 = _this4.state,
+            selected = _state7.selected,
+            shiftPressed = _state7.shiftPressed;
 
 
-        var item = shiftPressed ? Object.assign({}, selected) : {};
-        item[key] = true;
+        var selectedStep = shiftPressed ? Object.assign({}, selected) : {};
+        selectedStep[id] = true;
 
         _this4.setState({
           isMouseDown: true,
-          selected: item
+          selected: selectedStep
         });
       };
     }

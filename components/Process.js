@@ -60,8 +60,8 @@ var Process = function (_Step) {
       return _react2.default.createElement(
         'g',
         {
-          onMouseUp: stopDragging,
           onMouseDown: selectStep,
+          onMouseUp: stopDragging,
           transform: 'translate(' + x + ',' + y + ')'
         },
         _react2.default.createElement('rect', {

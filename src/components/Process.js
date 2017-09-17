@@ -26,8 +26,8 @@ export default class Process extends Step {
 
     return (
       <g
-        onMouseUp={stopDragging}
         onMouseDown={selectStep}
+        onMouseUp={stopDragging}
         transform={`translate(${x},${y})`}
       >
         <rect

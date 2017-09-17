@@ -10,14 +10,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _bindme = require('bindme');
-
-var _bindme2 = _interopRequireDefault(_bindme);
-
-var _Step = require('./Step');
-
-var _Step2 = _interopRequireDefault(_Step);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26,60 +18,40 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Arrow = function (_React$Component) {
-  _inherits(Arrow, _React$Component);
+var ErrorBoundary = function (_React$Component) {
+  _inherits(ErrorBoundary, _React$Component);
 
-  function Arrow(props) {
-    _classCallCheck(this, Arrow);
+  function ErrorBoundary(props) {
+    _classCallCheck(this, ErrorBoundary);
 
-    var _this = _possibleConstructorReturn(this, (Arrow.__proto__ || Object.getPrototypeOf(Arrow)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (ErrorBoundary.__proto__ || Object.getPrototypeOf(ErrorBoundary)).call(this, props));
 
-    (0, _bindme2.default)(_this, 'onMouseDown', 'onMouseEnter', 'onMouseLeave');
-
-    _this.state = { isMouseOver: false };
+    _this.state = { hasError: false };
     return _this;
   }
 
-  _createClass(Arrow, [{
-    key: 'onMouseDown',
-    value: function onMouseDown() {
-      // TODO selectArrow
-    }
-  }, {
-    key: 'onMouseEnter',
-    value: function onMouseEnter() {
-      this.setState({ isMouseOver: true });
-    }
-  }, {
-    key: 'onMouseLeave',
-    value: function onMouseLeave() {
-      this.setState({ isMouseOver: false });
+  _createClass(ErrorBoundary, [{
+    key: 'componentDidCatch',
+    value: function componentDidCatch() {
+      // Display fallback UI
+      this.setState({ hasError: true });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _Step$defaultProps$st = _Step2.default.defaultProps.style,
-          stroke = _Step$defaultProps$st.stroke,
-          strokeWidth = _Step$defaultProps$st.strokeWidth;
-      var isMouseOver = this.state.isMouseOver;
+      if (this.state.hasError) {
+        return _react2.default.createElement(
+          'h1',
+          null,
+          'Could not load diagram'
+        );
+      }
 
-
-      if (isMouseOver) strokeWidth++;
-
-      return _react2.default.createElement('path', {
-        d: 'M295 50 h100 v20 h50 v20',
-        fill: 'none',
-        onMouseDown: this.onMouseDown,
-        onMouseEnter: this.onMouseEnter,
-        onMouseLeave: this.onMouseLeave,
-        stroke: stroke,
-        strokeWidth: strokeWidth,
-        markerEnd: 'url(#arrow)'
-      });
+      return this.props.children;
     }
   }]);
 
-  return Arrow;
+  return ErrorBoundary;
 }(_react2.default.Component);
 
-exports.default = Arrow;
+exports.default = ErrorBoundary;
