@@ -247,7 +247,7 @@ export default class FlowChart extends React.Component {
       if (no(selected)) {
 
       } else {
-        const steps = Object.assign({}, diagram.steps)
+        const steps = [...diagram.steps]
 
         const deltaX = (dragging ? coordinates.x - dragging.x : 0)
         const deltaY = (dragging ? coordinates.y - dragging.y : 0)

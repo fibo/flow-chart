@@ -22,7 +22,14 @@
           "height": { "type": "number" },
           "width": { "type": "number" }
         },
-        "required": ["id", "x", "y", "type"],
+        "required": [
+          "id",
+          "x",
+          "y",
+          "type",
+          "width",
+          "height"
+        ],
         "additionalProperties": false
       }
     },

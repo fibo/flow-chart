@@ -9,13 +9,16 @@ const diagram = {
       type: 'decision',
       x: 250,
       y: 120,
+      height: 40,
       width: 100
     },
     {
       id: 'b',
       type: 'process',
       x: 250,
-      y: 20
+      y: 20,
+      height: 40,
+      width: 100
     },
     {
       id: 'c',
@@ -23,10 +26,10 @@ const diagram = {
       x: 20,
       y: 20,
       height: 20,
-      width: 20
+      width: 50
     }
 
-  ]
+  ],
   style: { backgroundColor: 'azure' },
   height: 800,
   width: 680
