@@ -28,7 +28,6 @@ const diagram = {
       height: 20,
       width: 50
     }
-
   ],
   style: { backgroundColor: 'azure' },
   height: 800,

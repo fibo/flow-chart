@@ -4,9 +4,8 @@ import ReactDOM from 'react-dom'
 import bindme from 'bindme'
 import no from 'not-defined'
 
-import validate from './validate'
-
 import Canvas from './components/Canvas'
+import ErrorBoundary from './components/ErrorBoundary'
 import Step from './components/Step'
 import Toolbar from './components/Toolbar'
 
@@ -15,14 +14,6 @@ import randomString from './utils/randomString'
 export default class FlowChart extends React.Component {
   constructor (props) {
     super(props)
-
-    try {
-      validate(props.diagram)
-    } catch (ignore) {
-      const error = new Error('Invalid flow-chart diagram')
-      error.diagram = props.diagram
-      throw error
-    }
 
     bindme(this,
       'createArrow',
@@ -340,8 +331,6 @@ export default class FlowChart extends React.Component {
     } = this.state
 
     const {
-      steps,
-      style,
       height,
       width
     } = diagram
@@ -351,8 +340,6 @@ export default class FlowChart extends React.Component {
       height: (toolbarHeight + height),
       width
     }
-
-    const commonCanvasProps = {height, width, style, steps}
 
     return (
       editable ? (
@@ -369,16 +356,18 @@ export default class FlowChart extends React.Component {
             height={toolbarHeight}
             width={width}
           />
-          <Canvas
-            {...commonCanvasProps}
-            createArrow={this.createArrow}
-            rectangularSelection={rectangularSelection}
-            selected={selected}
-            selectStep={this.selectStep}
-            stopDragging={this.stopDragging}
-          />
+          <ErrorBoundary>
+            <Canvas
+              diagram={diagram}
+              createArrow={this.createArrow}
+              rectangularSelection={rectangularSelection}
+              selected={selected}
+              selectStep={this.selectStep}
+              stopDragging={this.stopDragging}
+            />
+          </ErrorBoundary>
         </div>
-      ) : <Canvas {...commonCanvasProps} />
+      ) : <Canvas diagram={diagram} />
     )
   }
 

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import validate from '../validate'
+
 import Arrow from './Arrow'
 import RectangularSelection from './RectangularSelection'
 import Step from './Step'
@@ -14,18 +16,32 @@ const component = {
   terminator: Terminator
 }
 export default class Canvas extends React.Component {
+  constructor (props) {
+    super(props)
+
+    if (!validate(props.diagram)) {
+      const error = new Error('Invalid flow-chart diagram')
+      error.diagram = props.diagram
+      throw error
+    }
+  }
+
   render () {
     const {
       createArrow,
-      height,
-      steps,
+      diagram,
       rectangularSelection,
       selected,
       selectStep,
-      stopDragging,
+      stopDragging
+    } = this.props
+
+    const {
+      height,
+      steps,
       style,
       width
-    } = this.props
+    } = diagram
 
     const multipleSelection = Object.keys(selected).length > 1
 
@@ -50,7 +66,7 @@ export default class Canvas extends React.Component {
               fill={Step.defaultProps.style.stroke}
             />
           </marker>
-                    </defs>
+        </defs>
         <Arrow />
         {steps.map((step, i) => {
           const { id, type } = step
