@@ -1,13 +1,13 @@
 import React from 'react'
 
 export default class ErrorBoundary extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = { hasError: false }
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch () {
     // Display fallback UI
     this.setState({ hasError: true })
   }
