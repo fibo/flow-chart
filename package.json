@@ -15,7 +15,7 @@
     "prebrowserify_demo": "npm run babel",
     "start": "NODE_PATH=src budo demo.js --dir ./docs/demo/ --serve bundle.js --live --open -- -t babelify",
     "test": "for x in validate; do npm run test_$x; done",
-    "test_validate": "NODE_PATH=. tape test/validate.js"
+    "test_validate": "tape test/validate.js"
   },
   "pre-commit": [
     "lint"
@@ -42,13 +42,14 @@
   },
   "dependencies": {
     "bindme": "^1.0.0",
+    "is-my-json-valid": "^2.16.1",
     "not-defined": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-inline-json-import": "^0.2.1",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-preset-env": "^1.6.0",
-    "is-my-json-valid": "^2.16.1",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.2",
     "tape": "^4.8.0",

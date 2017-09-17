@@ -6,12 +6,17 @@ import Terminator from './Terminator'
 
 import RectangularSelection from './RectangularSelection'
 
+const component = {
+  decision: Decision,
+  process: Process,
+  terminator: Terminator
+}
 export default class Canvas extends React.Component {
   render () {
     const {
       createArrow,
       height,
-      items,
+      steps,
       rectangularSelection,
       selected,
       selectStep,
@@ -28,39 +33,24 @@ export default class Canvas extends React.Component {
         width={width}
         style={style}
       >
-        {Object.keys(items.decision).map(key => (
-          <Decision key={key}
-            createArrow={createArrow}
-            multipleSelection={multipleSelection}
-            selected={selected[key]}
-            selectStep={selectStep(key)}
-            stopDragging={stopDragging}
-            {...items.decision[key]}
+        {steps.map((step, i) => {
+          const { id, type } = step
+          const Step = component[type]
+
+          return (
+            <Step key={i}
+              createArrow={createArrow}
+              multipleSelection={multipleSelection}
+              selected={selected[id]}
+              selectStep={selectStep(id)}
+              stopDragging={stopDragging}
+              {...step}
           />
-        ))}
-        {Object.keys(items.process).map(key => (
-          <Process key={key}
-            createArrow={createArrow}
-            multipleSelection={multipleSelection}
-            selected={selected[key]}
-            selectStep={selectStep(key)}
-            stopDragging={stopDragging}
-            {...items.process[key]}
-          />
-        ))}
-        {Object.keys(items.terminator).map(key => (
-          <Terminator key={key}
-            createArrow={createArrow}
-            multipleSelection={multipleSelection}
-            selected={selected[key]}
-            selectStep={selectStep(key)}
-            stopDragging={stopDragging}
-            {...items.terminator[key]}
-          />
-        ))}
+          )
+        })}
         {rectangularSelection
-          ? <RectangularSelection {...rectangularSelection} />
-            : null}
+        ? <RectangularSelection {...rectangularSelection} />
+          : null}
       </svg>
     )
   }

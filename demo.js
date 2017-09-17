@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import FlowChart from 'flow-chart'
 
 const diagram = {
-  nodes: [
+  steps: [
     {
       id: 'a',
       type: 'decision',

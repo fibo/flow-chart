@@ -2,6 +2,9 @@
   "presets": [
     "es2015", "react"
   ],
+  "plugins": [
+    ["inline-json-import", {}]
+  ],
   "env": {
     "umd": {
       "plugins": [

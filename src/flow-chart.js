@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom'
 import bindme from 'bindme'
 import no from 'not-defined'
 
+import validate from './validate'
+
 import Canvas from './components/Canvas'
 import Step from './components/Step'
 import Toolbar from './components/Toolbar'
@@ -13,6 +15,14 @@ import randomString from './utils/randomString'
 export default class FlowChart extends React.Component {
   constructor (props) {
     super(props)
+
+    try {
+      validate(props.diagram)
+    } catch (ignore) {
+      const error = new Error('Invalid flow-chart diagram')
+      error.diagram = props.diagram
+      throw error
+    }
 
     bindme(this,
       'createArrow',
@@ -74,9 +84,10 @@ export default class FlowChart extends React.Component {
     event.stopPropagation()
   }
 
-  dropToolbarIcon (Item) {
+  dropToolbarIcon (StepIcon) {
     return (event) => {
       const {
+        diagram,
         toolbarHeight
       } = this.state
 
@@ -84,40 +95,31 @@ export default class FlowChart extends React.Component {
 
       // Create item if dropped inside flowchart.
       if (this.isInsideFlowChart(coordinates)) {
-        const id = this.generateId()
+        const id = this.generateId(4)
 
-        const diagram = Object.assign({}, this.state.diagram)
-        const itemType = Item.name.toLowerCase()
-
-        if (!diagram.items[itemType]) diagram.items[itemType] = {}
+        const type = StepIcon.name.toLowerCase()
 
         const x = coordinates.x - (Step.defaultProps.width / 2)
         const y = coordinates.y - toolbarHeight - (Step.defaultProps.height / 2)
 
-        diagram.items[itemType][id] = {x, y}
-
-        this.setState({ diagram })
+        this.setState({
+          diagram: Object.assign({},
+            diagram,
+            { steps: [...diagram.steps, { id, type, x, y }] }
+          )
+        })
       }
     }
   }
 
-  generateId () {
-    const id = randomString(4)
+  generateId (l) {
+    const newId = randomString(l)
 
-    const items = Object.assign(
-      { decision: {} },
-      { process: {} },
-      { terminator: {} },
-      this.state.diagram.items
+    const idExists = this.state.diagram.steps.find(({ id }) => id === newId
     )
 
-    const idExists = (
-      items.decision[id] ||
-      items.process[id] ||
-      items.terminator[id]
-    )
-
-    return idExists ? this.generateId() : id
+    // If new random id was found, try again with a longer random string.
+    return idExists ? this.generateId(l + 1) : newId
   }
 
   getCoordinates (event) {
@@ -245,22 +247,20 @@ export default class FlowChart extends React.Component {
       if (no(selected)) {
 
       } else {
-        const items = Object.assign({}, diagram.items)
+        const steps = Object.assign({}, diagram.steps)
 
         const deltaX = (dragging ? coordinates.x - dragging.x : 0)
         const deltaY = (dragging ? coordinates.y - dragging.y : 0)
 
-        Object.keys(selected).forEach((key) => {
-          Object.keys(items).forEach((type) => {
-            if (items[type][key]) {
-              items[type][key].x += deltaX
-              items[type][key].y += deltaY
-            }
+        steps
+          .filter(({ id }) => selected[id])
+          .forEach(step => {
+            step.x += deltaX
+            step.y += deltaY
           })
-        })
 
         this.setState({
-          diagram: Object.assign({}, diagram, { items }),
+          diagram: Object.assign({}, diagram, { steps }),
           dragging: coordinates
         })
       }
@@ -273,39 +273,26 @@ export default class FlowChart extends React.Component {
       rectangularSelection
     } = this.state
 
-    const {
-      items
-    } = diagram
-
     let selected = Object.assign({}, this.state.selected)
 
     if (rectangularSelection) {
-      Object.keys(items).forEach((itemType) => {
-        Object.keys(items[itemType]).forEach((key) => {
-          const {
-            x, y, height, width
-          } = Object.assign({},
-            Step.defaultProps,
-            items[itemType][key]
-          )
+      diagram.steps.forEach(({ id, x, y, width, height }) => {
+        // Consider when rectangular selection is reflected.
+        const boundsX = rectangularSelection.width >= 0 ? rectangularSelection.x : rectangularSelection.x + rectangularSelection.width
+        const boundsY = rectangularSelection.height >= 0 ? rectangularSelection.y : rectangularSelection.y + rectangularSelection.height
+        const boundsH = Math.abs(rectangularSelection.height)
+        const boundsW = Math.abs(rectangularSelection.width)
 
-          // Consider when rectangular selection is reflected.
-          const boundsX = rectangularSelection.width >= 0 ? rectangularSelection.x : rectangularSelection.x + rectangularSelection.width
-          const boundsY = rectangularSelection.height >= 0 ? rectangularSelection.y : rectangularSelection.y + rectangularSelection.height
-          const boundsH = Math.abs(rectangularSelection.height)
-          const boundsW = Math.abs(rectangularSelection.width)
+        const isInside = (
+          (x >= boundsX) &&
+          (y >= boundsY) &&
+          (height <= boundsH) &&
+          (width <= boundsW)
+        )
 
-          const isInside = (
-            (x >= boundsX) &&
-            (y >= boundsY) &&
-            (height <= boundsH) &&
-            (width <= boundsW)
-          )
-
-          if (isInside) {
-            selected[key] = true
-          }
-        })
+        if (isInside) {
+          selected[id] = true
+        }
       })
     }
 
@@ -353,17 +340,11 @@ export default class FlowChart extends React.Component {
     } = this.state
 
     const {
-      items,
+      steps,
       style,
       height,
       width
     } = diagram
-
-    // Defaults.
-
-    if (no(items.decision)) items.decision = {}
-    if (no(items.process)) items.process = {}
-    if (no(items.terminator)) items.terminator = {}
 
     const containerStyle = {
       boxShadow: isMouseOver ? '3px 4px 16px 0px rgba(0, 0, 0, 0.5)' : null,
@@ -371,7 +352,7 @@ export default class FlowChart extends React.Component {
       width
     }
 
-    const commonCanvasProps = {height, width, style, items}
+    const commonCanvasProps = {height, width, style, steps}
 
     return (
       editable ? (
@@ -401,7 +382,7 @@ export default class FlowChart extends React.Component {
     )
   }
 
-  selectStep (key) {
+  selectStep (id) {
     return (event) => {
       event.stopPropagation()
 
@@ -410,12 +391,12 @@ export default class FlowChart extends React.Component {
         shiftPressed
       } = this.state
 
-      const item = shiftPressed ? Object.assign({}, selected) : {}
-      item[key] = true
+      let selectedStep = shiftPressed ? Object.assign({}, selected) : {}
+      selectedStep[id] = true
 
       this.setState({
         isMouseDown: true,
-        selected: item
+        selected: selectedStep
       })
     }
   }

@@ -1,10 +1,7 @@
 const test = require('tape')
-const validator = require('is-my-json-valid')
 
-const schema = require('../src/schema.json')
+const validate = require('../src/validate')
 const demo = require('../src/examples/demo.json')
-
-const validate = validator(schema)
 
 test('Validate JSON schema', (t) => {
   t.ok(validate(demo), 'demo.json')
