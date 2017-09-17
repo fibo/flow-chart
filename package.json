@@ -14,7 +14,8 @@
     "postversion": "git push origin v${npm_package_version}; npm publish; git push origin master",
     "prebrowserify_demo": "npm run babel",
     "start": "NODE_PATH=src budo demo.js --dir ./docs/demo/ --serve bundle.js --live --open -- -t babelify",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "for x in validate; do npm run test_$x; done",
+    "test_validate": "NODE_PATH=. tape test/validate.js"
   },
   "pre-commit": [
     "lint"
@@ -47,8 +48,10 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "babel-preset-env": "^1.6.0",
+    "is-my-json-valid": "^2.16.1",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.2",
+    "tape": "^4.8.0",
     "zeroconf-redux": "^2.0.0"
   }
 }
